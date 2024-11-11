@@ -1253,7 +1253,7 @@ closing price of the stock.
     select **New SQL query** under **Blank** section. We'll start
     building our schema in the next step.
 
-![](./media/image147.png)
+    ![](./media/image147.png)
 
 2.  In our data warehouse, run the following SQL to create the fact and
     dimension tables. As in the previous step, you can run this ad-hoc
@@ -1262,101 +1262,67 @@ closing price of the stock.
 3.  In the query editor, copy and paste the following code. Click on
     the **Run** button to execute the query. After the query is
     executed, you will see the results.
+    ```
+    /* 2 - Create Dimension and Fact tables.sql */
+    
+    -- Dimensions and Facts (dbo)
+    CREATE TABLE dbo.fact_Stocks_Daily_Prices
+    (
+       Symbol_SK INT NOT NULL
+       ,PriceDateKey DATE NOT NULL
+       ,MinPrice FLOAT NOT NULL
+       ,MaxPrice FLOAT NOT NULL
+       ,ClosePrice FLOAT NOT NULL
+    )
+    GO
+    
+    CREATE TABLE dbo.dim_Symbol
+    (
+        Symbol_SK INT NOT NULL
+        ,Symbol VARCHAR(5) NOT NULL
+        ,Name VARCHAR(25)
+        ,Market VARCHAR(15)
+    )
+    GO
+    
+    CREATE TABLE dbo.dim_Date 
+    (
+        [DateKey] DATE NOT NULL
+        ,[DayOfMonth] int
+        ,[DayOfWeeK] int
+        ,[DayOfWeekName] varchar(25)
+        ,[Year] int
+        ,[Month] int
+        ,[MonthName] varchar(25)
+        ,[Quarter] int
+        ,[QuarterName] varchar(2)
+    )
+    GO
+    ```
 
-> **Copy**
-
-/\* 2 - Create Dimension and Fact tables.sql \*/
-
-\-- Dimensions and Facts (dbo)
-
-CREATE TABLE dbo.fact\_Stocks\_Daily\_Prices
-
-(
-
-Symbol\_SK INT NOT NULL
-
-,PriceDateKey DATE NOT NULL
-
-,MinPrice FLOAT NOT NULL
-
-,MaxPrice FLOAT NOT NULL
-
-,ClosePrice FLOAT NOT NULL
-
-)
-
-GO
-
-CREATE TABLE dbo.dim\_Symbol
-
-(
-
-Symbol\_SK INT NOT NULL
-
-,Symbol VARCHAR(5) NOT NULL
-
-,Name VARCHAR(25)
-
-,Market VARCHAR(15)
-
-)
-
-GO
-
-CREATE TABLE dbo.dim\_Date
-
-(
-
-\[DateKey\] DATE NOT NULL
-
-,\[DayOfMonth\] int
-
-,\[DayOfWeeK\] int
-
-,\[DayOfWeekName\] varchar(25)
-
-,\[Year\] int
-
-,\[Month\] int
-
-,\[MonthName\] varchar(25)
-
-,\[Quarter\] int
-
-,\[QuarterName\] varchar(2)
-
-)
-
-GO
-
-![A screenshot of a computer Description automatically
-generated](./media/image150.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image151.png)
+    ![](./media/image150.png)
+    
+    ![](./media/image151.png)
 
 4.  Rename the query for reference. Right-click on **SQL query** in
     Explorer and select **Rename**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image152.png)
+      ![](./media/image152.png)
 
-5.  In the **Rename** dialog box, under the **Name** field, enter +++
-    Create Dimension and Fact tables**+++**, then click on the
+5.  In the **Rename** dialog box, under the **Name** field, enter 
+    **+++Create Dimension and Fact tables+++**, then click on the
     **Rename** button. 
 
-![A screenshot of a computer Description automatically
-generated](./media/image153.png)
+    ![](./media/image153.png)
 
 ## Task 2: Load the date dimension
 
-1.  Click ***New SQL query*** at the top of the window. Click on ***New
-    SQL query*** dropdown in the command bar, then select **New SQL
+1.  Click **New SQL query** at the top of the window. Click on **New
+    SQL query** dropdown in the command bar, then select **New SQL
     query** under **Blank** section. We'll start building our schema in
     the next step:
 
-![A screenshot of a computer Description automatically
-generated](./media/image154.png)
+    ![](./media/image154.png)
 
 2.  The date dimension is differentiated; it can be loaded once with all
     the values we'd need. Run the following script, which creates a
@@ -1366,121 +1332,88 @@ generated](./media/image154.png)
 3.  In the query editor, copy and paste the following code. Click on
     the **Run** button to execute the query. After the query is
     executed, you will see the results.
+    ```
+    /* 3 - Load Dimension tables.sql */
+    
+    CREATE PROC [ETL].[sp_Dim_Date_Load]
+    @BeginDate DATE = NULL
+    ,@EndDate DATE = NULL
+    AS
+    BEGIN
+    
+    SET @BeginDate = ISNULL(@BeginDate, '2022-01-01')
+    SET @EndDate = ISNULL(@EndDate, DATEADD(year, 2, GETDATE()))
+    
+    DECLARE @N AS INT = 0
+    DECLARE @NumberOfDates INT = DATEDIFF(day,@BeginDate, @EndDate)
+    DECLARE @SQL AS NVARCHAR(MAX)
+    DECLARE @STR AS VARCHAR(MAX) = ''
+    
+    WHILE @N <= @NumberOfDates
+        BEGIN
+        SET @STR = @STR + CAST(DATEADD(day,@N,@BeginDate) AS VARCHAR(10)) 
+        
+        IF @N < @NumberOfDates
+            BEGIN
+                SET @STR = @STR + ','
+            END
+    
+        SET @N = @N + 1;
+        END
+    
+    SET @SQL = 'INSERT INTO dbo.dim_Date ([DateKey]) SELECT CAST([value] AS DATE) FROM STRING_SPLIT(@STR, '','')';
+    
+    EXEC sys.sp_executesql @SQL, N'@STR NVARCHAR(MAX)', @STR;
+    
+    UPDATE dbo.dim_Date
+    SET 
+        [DayOfMonth] = DATEPART(day,DateKey)
+        ,[DayOfWeeK] = DATEPART(dw,DateKey)
+        ,[DayOfWeekName] = DATENAME(weekday, DateKey)
+        ,[Year] = DATEPART(yyyy,DateKey)
+        ,[Month] = DATEPART(month,DateKey)
+        ,[MonthName] = DATENAME(month, DateKey)
+        ,[Quarter] = DATEPART(quarter,DateKey)
+        ,[QuarterName] = CONCAT('Q',DATEPART(quarter,DateKey))
+    
+    END
+    GO
+    ```
 
-> **Copy**
-
-/\* 3 - Load Dimension tables.sql \*/
-
-CREATE PROC \[ETL\].\[sp\_Dim\_Date\_Load\]
-
-@BeginDate DATE = NULL
-
-,@EndDate DATE = NULL
-
-AS
-
-BEGIN
-
-SET @BeginDate = ISNULL(@BeginDate, '2022-01-01')
-
-SET @EndDate = ISNULL(@EndDate, DATEADD(year, 2, GETDATE()))
-
-DECLARE @N AS INT = 0
-
-DECLARE @NumberOfDates INT = DATEDIFF(day,@BeginDate, @EndDate)
-
-DECLARE @SQL AS NVARCHAR(MAX)
-
-DECLARE @STR AS VARCHAR(MAX) = ''
-
-WHILE @N \<= @NumberOfDates
-
-BEGIN
-
-SET @STR = @STR + CAST(DATEADD(day,@N,@BeginDate) AS VARCHAR(10))
-
-IF @N \< @NumberOfDates
-
-BEGIN
-
-SET @STR = @STR + ','
-
-END
-
-SET @N = @N + 1;
-
-END
-
-SET @SQL = 'INSERT INTO dbo.dim\_Date (\[DateKey\]) SELECT
-CAST(\[value\] AS DATE) FROM STRING\_SPLIT(@STR, '','')';
-
-EXEC sys.sp\_executesql @SQL, N'@STR NVARCHAR(MAX)', @STR;
-
-UPDATE dbo.dim\_Date
-
-SET
-
-\[DayOfMonth\] = DATEPART(day,DateKey)
-
-,\[DayOfWeeK\] = DATEPART(dw,DateKey)
-
-,\[DayOfWeekName\] = DATENAME(weekday, DateKey)
-
-,\[Year\] = DATEPART(yyyy,DateKey)
-
-,\[Month\] = DATEPART(month,DateKey)
-
-,\[MonthName\] = DATENAME(month, DateKey)
-
-,\[Quarter\] = DATEPART(quarter,DateKey)
-
-,\[QuarterName\] = CONCAT('Q',DATEPART(quarter,DateKey))
-
-END
-
-GO
-
-![A screenshot of a computer Description automatically
-generated](./media/image155.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image156.png)
+    ![](./media/image155.png)
+    
+    ![](./media/image156.png)
 
 4.  From same query window, execute the above procedure by running the
     following script.
 
-> **Copy**
+     **Copy**
+    ```
+    /* 3 - Load Dimension tables.sql */
+    Exec ETL.sp_Dim_Date_Load
+    ```
 
-/\* 3 - Load Dimension tables.sql \*/
-
-Exec ETL.sp\_Dim\_Date\_Load
-
-![A screenshot of a computer Description automatically
-generated](./media/image157.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image158.png)
+     ![](./media/image157.png)
+    
+     ![](./media/image158.png)
 
 5.  Rename the query for reference. Right-click on **SQL query** in
     Explorer and select **Rename**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image159.png)
+     ![](./media/image159.png)
 
-6.  In the **Rename** dialog box, under the **Name** field, enter +++
-    **Load Dimension tables+++**, then click on the **Rename** button. 
+6.  In the **Rename** dialog box, under the **Name** field, enter 
+    **+++Load Dimension tables+++**, then click on the **Rename** button. 
 
-![A screenshot of a computer Description automatically
-generated](./media/image160.png)
+     ![](./media/image160.png)
 
 ## Task 3: Create the procedure to load the Symbol dimension
 
-1.  Click on ***New SQL query*** dropdown in the command bar, then
+1.  Click on **New SQL query** dropdown in the command bar, then
     select **New SQL query** under **Blank** section. We'll start
     building our schema in the next step.
 
-![A screenshot of a computer Description automatically
-generated](./media/image154.png)
+     ![](./media/image154.png)
 
 2.  Similar to the date dimension, each stock symbol corresponds to a
     row in the Symbols dimension table. This table holds details of the
@@ -1492,95 +1425,64 @@ generated](./media/image154.png)
     procedure that will load the stock symbol dimension. We'll execute
     this in the pipeline to handle any new stocks that might enter the
     feed.
+      ```
+      /* 3 - Load Dimension tables.sql */
+      
+      CREATE PROC [ETL].[sp_Dim_Symbol_Load]
+      AS
+      BEGIN
+      
+      DECLARE @MaxSK INT = (SELECT ISNULL(MAX(Symbol_SK),0) FROM [dbo].[dim_Symbol])
+      
+      INSERT [dbo].[dim_Symbol]
+      SELECT  
+          Symbol_SK = @MaxSK + ROW_NUMBER() OVER(ORDER BY Symbol)  
+          , Symbol
+          , Name
+          ,Market
+      FROM 
+          (SELECT DISTINCT
+          sdp.Symbol 
+          , Name  = 'Stock ' + sdp.Symbol 
+          , Market = CASE SUBSTRING(Symbol,1,1)
+                          WHEN 'B' THEN 'NASDAQ'
+                          WHEN 'W' THEN 'NASDAQ'
+                          WHEN 'I' THEN 'NYSE'
+                          WHEN 'T' THEN 'NYSE'
+                          ELSE 'No Market'
+                      END
+          FROM 
+              [stg].[vw_StocksDailyPrices] sdp
+          WHERE 
+              sdp.Symbol NOT IN (SELECT Symbol FROM [dbo].[dim_Symbol])
+          ) stg
+      
+      END
+      GO
+      ```
 
-> **Copy**
 
-/\* 3 - Load Dimension tables.sql \*/
-
-CREATE PROC \[ETL\].\[sp\_Dim\_Symbol\_Load\]
-
-AS
-
-BEGIN
-
-DECLARE @MaxSK INT = (SELECT ISNULL(MAX(Symbol\_SK),0) FROM
-\[dbo\].\[dim\_Symbol\])
-
-INSERT \[dbo\].\[dim\_Symbol\]
-
-SELECT
-
-Symbol\_SK = @MaxSK + ROW\_NUMBER() OVER(ORDER BY Symbol)
-
-, Symbol
-
-, Name
-
-,Market
-
-FROM
-
-(SELECT DISTINCT
-
-sdp.Symbol
-
-, Name = 'Stock ' + sdp.Symbol
-
-, Market = CASE SUBSTRING(Symbol,1,1)
-
-WHEN 'B' THEN 'NASDAQ'
-
-WHEN 'W' THEN 'NASDAQ'
-
-WHEN 'I' THEN 'NYSE'
-
-WHEN 'T' THEN 'NYSE'
-
-ELSE 'No Market'
-
-END
-
-FROM
-
-\[stg\].\[vw\_StocksDailyPrices\] sdp
-
-WHERE
-
-sdp.Symbol NOT IN (SELECT Symbol FROM \[dbo\].\[dim\_Symbol\])
-
-) stg
-
-END
-
-GO
-
-![A screenshot of a computer Description automatically
-generated](./media/image161.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image162.png)
+     ![](./media/image161.png)
+    
+     ![](./media/image162.png)
 
 7.  Rename the query for reference. Right-click on **SQL query** in
     Explorer and select **Rename**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image163.png)
+     ![](./media/image163.png)
 
-8.  In the **Rename** dialog box, under the **Name** field, enter +++
-    **Load the stock symbol dimension** **+++**, then click on the
+8.  In the **Rename** dialog box, under the **Name** field, enter 
+    **+++Load the stock symbol dimension+++**, then click on the
     **Rename** button. 
 
-![A screenshot of a computer Description automatically
-generated](./media/image164.png)
-
+     ![](./media/image164.png)
 ## **Task 4: Create the views**
 
 1.  Click on ***New SQL query*** dropdown in the command bar, then
     select **New SQL query** under **Blank** section. We'll start
     building our schema in the next step.
 
-![A screenshot of a computer Description automatically
-generated](./media/image154.png)
+     ![](./media/image154.png)
 
 2.  Create views that support the aggregation of the data during the
     load. When the pipeline runs, data is copied from the KQL database
@@ -1589,149 +1491,99 @@ generated](./media/image154.png)
 
 3.  In the query editor, copy and paste the following code. Click on
     the **Run** button to execute the query.
-
-/\* 4 - Create Staging Views.sql \*/
-
-CREATE VIEW \[stg\].\[vw\_StocksDailyPrices\]
-
-AS
-
-SELECT
-
-Symbol = symbol
-
-,PriceDate = datestamp
-
-,MIN(price) as MinPrice
-
-,MAX(price) as MaxPrice
-
-,(SELECT TOP 1 price FROM \[stg\].\[StocksPrices\] sub
-
-WHERE sub.symbol = prices.symbol and sub.datestamp = prices.datestamp
-
-ORDER BY sub.timestamp DESC
-
-) as ClosePrice
-
-FROM
-
-\[stg\].\[StocksPrices\] prices
-
-GROUP BY
-
-symbol,
-datestamp
-
-GO
-
-/\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*/
-
-CREATE VIEW stg.vw\_StocksDailyPricesEX
-
-AS
-
-SELECT
-
-ds.\[Symbol\_SK\]
-
-,dd.DateKey as PriceDateKey
-
-,MinPrice
-
-,MaxPrice
-
-,ClosePrice
-
-FROM
-
-\[stg\].\[vw\_StocksDailyPrices\] sdp
-
-INNER JOIN \[dbo\].\[dim\_Date\] dd
-
-ON dd.DateKey = sdp.PriceDate
-
-INNER JOIN \[dbo\].\[dim\_Symbol\] ds
-
-ON ds.Symbol = sdp.Symbol
-
-GO
-
-![A screenshot of a computer Description automatically
-generated](./media/image165.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image166.png)
+    ```
+    /* 4 - Create Staging Views.sql */
+    
+    CREATE VIEW [stg].[vw_StocksDailyPrices] 
+    AS 
+    SELECT 
+        Symbol = symbol
+        ,PriceDate = datestamp
+        ,MIN(price) as MinPrice
+        ,MAX(price) as MaxPrice
+        ,(SELECT TOP 1 price FROM [stg].[StocksPrices] sub
+        WHERE sub.symbol = prices.symbol and sub.datestamp = prices.datestamp
+        ORDER BY sub.timestamp DESC
+        ) as ClosePrice
+    FROM 
+        [stg].[StocksPrices] prices
+    GROUP BY
+        symbol, datestamp
+    GO
+    /**************************************/
+    CREATE VIEW stg.vw_StocksDailyPricesEX
+    AS
+    SELECT
+        ds.[Symbol_SK]
+        ,dd.DateKey as PriceDateKey
+        ,MinPrice
+        ,MaxPrice
+        ,ClosePrice
+    FROM 
+        [stg].[vw_StocksDailyPrices] sdp
+    INNER JOIN [dbo].[dim_Date] dd
+        ON dd.DateKey = sdp.PriceDate
+    INNER JOIN [dbo].[dim_Symbol] ds
+        ON ds.Symbol = sdp.Symbol
+    GO
+    ```
+    ![](./media/image165png)
+    
+    ![](./media/image166.png)
 
 4.  Rename the query for reference. Right-click on **SQL query** in
     Explorer and select **Rename**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image167.png)
+      ![](./media/image167.png)
 
-5.  In the **Rename** dialog box, under the **Name** field, enter +++
-    **Create Staging Views** **+++**, then click on the **Rename**
+5.  In the **Rename** dialog box, under the **Name** field, enter
+    **+++Create Staging Views+++**, then click on the **Rename**
     button. 
 
-![A screenshot of a computer screen Description automatically
-generated](./media/image168.png)
+    ![](./media/image168.png)
 
 ## Task 5: Add activity to load symbols
 
 1.  On the **StockDW** page, click on **PL\_Refresh\_DWH** on the
     left-sided navigation menu.
 
-![](./media/image169.png)
+    ![](./media/image169.png)
 
-2.  In the pipeline, add a new ***Stored Procedure*** activity
-    named ***Populate Symbols Dimension*** that executes the procedure,
+2.  In the pipeline, add a new **Stored Procedure** activity
+    named **Populate Symbols Dimension** that executes the procedure,
     which loads the stock symbols.
 
 3.  This should be connected to the success output of the ForEach
     activity (not within the ForEach activity).
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image170.png)
+    ![](./media/image170.png)
 
-4.  On the **General** tab, in the **Name field,** enter +++**Populate
-    Symbols Dimension** +++
+4.  On the **General** tab, in the **Name field,** enter **+++Populate
+    Symbols Dimension+++**
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image171.png)
+    ![](./media/image171.png)
 
 5.  Click on the **Settings** tab, enter the following settings.
 
-<table>
-<thead>
-<tr class="header">
-<th><strong>Connection</strong></th>
-<th><strong>Workspace</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Stored procedure name</strong></td>
-<td>[ETL].[sp_Dim_Symbol_Load]</td>
-</tr>
-</tbody>
-</table>
+    |  |  |
+    |---|---|
+    |Connection|	Workspace|
+    |Stored procedure name|	[ETL].[sp_Dim_Symbol_Load]|
 
-![](./media/image172.png)
+    ![](./media/image172.png)
 
 ## Task 6: Create the procedure to load daily prices
 
-1.  On the **PL\_Refresh\_DWH** page, click on **StockDW** on the
+1.  On the **PL_Refresh_DWH** page, click on **StockDW** on the
     left-sided navigation menu.
 
-![A screenshot of a computer Description automatically
-generated](./media/image173.png)
+    ![](./media/image173.png)
 
 2.  Click on ***New SQL query*** dropdown in the command bar, then
     select **New SQL query** under **Blank** section. We'll start
     building our schema in the next step.
 
-![A screenshot of a computer Description automatically
-generated](./media/image154.png)
+      ![](./media/image154.png)
 
 3.  Next, run the below script to create the procedure that builds the
     fact table. This procedure merges data from staging into the fact
@@ -1739,166 +1591,110 @@ generated](./media/image154.png)
     will be updated to reflect any changes in the min, max, and closing
     price.
 
-> **Note**: Currently, Fabric data warehouse does not support the T-SQL
-> merge statement; therefore, data will be updated and then inserted as
-> needed.
+  > **Note**: Currently, Fabric data warehouse does not support the T-SQL
+  > merge statement; therefore, data will be updated and then inserted as
+  > needed.
 
 4.  In the query editor, copy and paste the following code. Click on
     the **Run** button to execute the query.
+    ```
+    /* 5 - ETL.sp_Fact_Stocks_Daily_Prices_Load.sql */
+    
+    CREATE PROCEDURE [ETL].[sp_Fact_Stocks_Daily_Prices_Load]
+    AS
+    BEGIN
+    BEGIN TRANSACTION
+    
+        UPDATE fact
+        SET 
+            fact.MinPrice = CASE 
+                            WHEN fact.MinPrice IS NULL THEN stage.MinPrice
+                            ELSE CASE WHEN fact.MinPrice < stage.MinPrice THEN fact.MinPrice ELSE stage.MinPrice END
+                        END
+            ,fact.MaxPrice = CASE 
+                            WHEN fact.MaxPrice IS NULL THEN stage.MaxPrice
+                            ELSE CASE WHEN fact.MaxPrice > stage.MaxPrice THEN fact.MaxPrice ELSE stage.MaxPrice END
+                        END
+            ,fact.ClosePrice = CASE 
+                            WHEN fact.ClosePrice IS NULL THEN stage.ClosePrice
+                            WHEN stage.ClosePrice IS NULL THEN fact.ClosePrice
+                            ELSE stage.ClosePrice
+                        END 
+        FROM [dbo].[fact_Stocks_Daily_Prices] fact  
+        INNER JOIN [stg].[vw_StocksDailyPricesEX] stage
+            ON fact.PriceDateKey = stage.PriceDateKey
+            AND fact.Symbol_SK = stage.Symbol_SK
+    
+        INSERT INTO [dbo].[fact_Stocks_Daily_Prices]  
+            (Symbol_SK, PriceDateKey, MinPrice, MaxPrice, ClosePrice)
+        SELECT
+            Symbol_SK, PriceDateKey, MinPrice, MaxPrice, ClosePrice
+        FROM 
+            [stg].[vw_StocksDailyPricesEX] stage
+        WHERE NOT EXISTS (
+            SELECT * FROM [dbo].[fact_Stocks_Daily_Prices] fact
+            WHERE fact.PriceDateKey = stage.PriceDateKey
+                AND fact.Symbol_SK = stage.Symbol_SK
+        )
+    
+    COMMIT
+    
+    END
+    GO
+    ```
 
-/\* 5 - ETL.sp\_Fact\_Stocks\_Daily\_Prices\_Load.sql \*/
-
-CREATE PROCEDURE \[ETL\].\[sp\_Fact\_Stocks\_Daily\_Prices\_Load\]
-
-AS
-
-BEGIN
-
-BEGIN TRANSACTION
-
-UPDATE fact
-
-SET
-
-fact.MinPrice = CASE
-
-WHEN fact.MinPrice IS NULL THEN stage.MinPrice
-
-ELSE CASE WHEN fact.MinPrice \< stage.MinPrice THEN fact.MinPrice ELSE
-stage.MinPrice END
-
-END
-
-,fact.MaxPrice = CASE
-
-WHEN fact.MaxPrice IS NULL THEN stage.MaxPrice
-
-ELSE CASE WHEN fact.MaxPrice \> stage.MaxPrice THEN fact.MaxPrice ELSE
-stage.MaxPrice END
-
-END
-
-,fact.ClosePrice = CASE
-
-WHEN fact.ClosePrice IS NULL THEN stage.ClosePrice
-
-WHEN stage.ClosePrice IS NULL THEN fact.ClosePrice
-
-ELSE stage.ClosePrice
-
-END
-
-FROM \[dbo\].\[fact\_Stocks\_Daily\_Prices\] fact
-
-INNER JOIN \[stg\].\[vw\_StocksDailyPricesEX\] stage
-
-ON fact.PriceDateKey = stage.PriceDateKey
-
-AND fact.Symbol\_SK = stage.Symbol\_SK
-
-INSERT INTO \[dbo\].\[fact\_Stocks\_Daily\_Prices\]
-
-(Symbol\_SK, PriceDateKey, MinPrice, MaxPrice, ClosePrice)
-
-SELECT
-
-Symbol\_SK, PriceDateKey, MinPrice, MaxPrice, ClosePrice
-
-FROM
-
-\[stg\].\[vw\_StocksDailyPricesEX\] stage
-
-WHERE NOT EXISTS (
-
-SELECT \* FROM \[dbo\].\[fact\_Stocks\_Daily\_Prices\] fact
-
-WHERE fact.PriceDateKey = stage.PriceDateKey
-
-AND fact.Symbol\_SK = stage.Symbol\_SK
-
-)
-
-COMMIT
-
-END
-
-GO
-
-![A screenshot of a computer Description automatically
-generated](./media/image174.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image175.png)
+    ![](./media/image174.png)
+    
+    ![](./media/image175.png)
 
 6.  Rename the query for reference. Right-click on **SQL query** in
     Explorer and select **Rename**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image176.png)
+    ![](./media/image176.png)
 
-7.  In the **Rename** dialog box, under the **Name** field, enter +++
-    ETL.sp\_Fact\_Stocks\_Daily\_Prices\_Load**+++**, then click on the
+7.  In the **Rename** dialog box, under the **Name** field, enter 
+    **++ETL.sp_Fact_Stocks_Daily_Prices_Load+++**, then click on the
     **Rename** button. 
 
-![A screenshot of a computer Description automatically
-generated](./media/image177.png)
+    ![](./media/image177.png)
 
 ## Task 7: Add activity to the pipeline to load daily stock prices
 
 1.  On the **StockDW** page, click on **PL\_Refresh\_DWH** on the
     left-sided navigation menu.
 
-![A screenshot of a computer Description automatically
-generated](./media/image178.png)
+    ![](./media/image178.png)
 
-2.  Add another ***Stored Procedure*** activity to the pipeline
-    named ***Populate Fact Stocks Daily Prices*** that loads the stocks
+2.  Add another **Stored Procedure** activity to the pipeline
+    named **Populate Fact Stocks Daily Prices** that loads the stocks
     prices from staging into the fact table. Connect the success output
-    of the *Populate Symbols Dimension* to the new *Populate Fact Stocks
-    Daily Prices* activity.
+    of the **Populate Symbols Dimension** to the new **Populate Fact Stocks
+    Daily Prices** activity.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image179.png)
-> 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image180.png)
+      ![](./media/image179.png)
+      ![](./media/image180.png)
 
 3.  Click on the **Settings** tab, enter the following settings.
 
-<table>
-<thead>
-<tr class="header">
-<th><strong>Connection</strong></th>
-<th>Select <strong>StocksDW</strong> from the dropdown list</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Stored procedure name</strong></td>
-<td>[ETL].[sp_Fact_Stocks_Daily_Prices_Load]</td>
-</tr>
-</tbody>
-</table>
+    |  |  |
+    |---|---|
+    |Connection	|Select StocksDW from the dropdown list|
+    |Stored procedure name|	[ETL].[sp_Fact_Stocks_Daily_Prices_Load]|
 
-![A screenshot of a computer Description automatically
-generated](./media/image181.png)
+    ![](./media/image181.png)
 
 ## Task 8. Run the pipeline
 
 1.  Run the pipeline by clicking on the ***Run*** button, and verify the
     pipeline runs and fact and dimension tables are being loaded.
 
-![A screenshot of a computer Description automatically
-generated](./media/image182.png)
-
+    ![](./media/image182.png)
 2.  In the **Save and run?** dialog box, click on **Save and run**
     button
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image142.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image183.png)
+    ![](./media/image142.png)
+    
+    ![](./media/image183.png)
 
 ## Task 9: Schedule the pipeline
 
@@ -1906,19 +1702,17 @@ generated](./media/image183.png)
     business case, but this could be run frequently (every few minutes)
     or throughout the day.
 
-> **Note**: In this specific case, as there are roughly 700k rows per
-> day, and KQL limits the query results to 500k, the pipeline must run
-> at least twice per day to stay current.
+    > **Note**: In this specific case, as there are roughly 700k rows per
+    > day, and KQL limits the query results to 500k, the pipeline must run
+    > at least twice per day to stay current.
 
 2.  To schedule the pipeline, click the ***Schedule* **button (next to
     the *Run* button) and set up a recurring schedule, such as hourly or
     every few minutes.
 
-![A screenshot of a computer Description automatically
-generated](./media/image184.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image185.png)
+    ![](./media/image184.png)
+    
+    ![](./media/image185.png)
 
 # Exercise 7: Semantic Modeling
 
@@ -1942,41 +1736,34 @@ automatically. We can leverage this in Power BI, but it also includes
 many artifacts of the table we may not need. So, we'll create a new
 semantic model with just our fact and two-dimension tables.
 
-1.  On the **PL\_Refresh\_DWH** page, click on **StockDW** on the
+1.  On the **PL_Refresh_DWH** page, click on **StockDW** on the
     left-sided navigation menu.
 
-![A screenshot of a computer Description automatically
-generated](./media/image186.png)
+    ![](./media/image186.png)
 
 2.  Click on the **refresh** icon as shown in the below image.
 
-![A screenshot of a computer Description automatically
-generated](./media/image187.png)
+    ![](./media/image187.png)
 
-![A screenshot of a computer Description automatically
-generated](./media/image188.png)
+    ![](./media/image188.png)
 
 3.  In StockDW page, select the ***Reporting* **tab and then
     select ***New semantic model***.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image189.png)
+    ![](./media/image189.png)
 
 4.  In the New semantic model tab, enter the name as ***StocksModel*,**
     and select only the fact and dimensions table, as we are concerned
-    with ***fact\_Stocks\_Daily\_Prices*, *dim\_Date*,
-    and *dim\_Symbol***. Click on the **Confirm** button.
-
-![A screenshot of a computer Description automatically
-generated](./media/image190.png)
+    with **fact_Stocks_Daily_Prices**, **dim_Date**,
+    and **dim_Symbol**. Click on the **Confirm** button.
+    ![](./media/image190.png)
 
 ## Task 2. Add relationships
 
 1.  On the **StockDW** page, click on **RealTimeWorkspace** on the
     left-sided navigation menu and select **StockModel**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image191.png)
+    ![](./media/image191.png)
 
 2.  The model designer should automatically open after creating the
     semantic model above. If it doesn't, or if you'd like to return to
@@ -1984,11 +1771,9 @@ generated](./media/image191.png)
     from the list of resources in the workspace, and then
     selecting ***Open Data Model*** from the semantic model item.
 
-![A screenshot of a computer Description automatically
-generated](./media/image192.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image193.png)
+      ![](./media/image192.png)
+      
+      ![](./media/image193.png)
 
 3.  To create relationships between the fact and dimension tables, drag
     the key from the fact table to the corresponding key in the
@@ -1997,76 +1782,65 @@ generated](./media/image193.png)
 4.  For this data model, you need to define the relationship between
     different tables so that you can create reports and visualizations
     based on data coming across different tables. From
-    the **fact\_Stocks\_Daily\_Prices** table, drag
+    the **fact_Stocks_Daily_Prices** table, drag
     the **PriceDateKey** field and drop it on the **DateKey** field in
-    the **dim\_Date** table to create a relationship. The **New
+    the **dim_Date** table to create a relationship. The **New
     relationship** dialog box appears.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image194.png)
+    ![](./media/image194.png)
 
 5.  In the **New relationship** dialog box:
 
-<!-- end list -->
+      - **From table** is populated with **fact\_Stocks\_Daily\_Prices** and
+      the column of **PriceDateKey.**
+  
+    - **To table** is populated with **dim\_Date**  and the column of
+      **DateKey**
+  
+    - Cardinality: **Many to one (*:1)**
+  
+    - Cross filter direction: **Single**
+  
+    - Leave the box next to **Make this relationship active** selected.
+  
+    - Select **Ok.**
 
-  - **From table** is populated with **fact\_Stocks\_Daily\_Prices** and
-    the column of **PriceDateKey.**
+    ![](./media/image195.png)
+    
+    ![](./media/image196.png)
 
-  - **To table** is populated with **dim\_Date**  and the column of
-    **DateKey**
-
-  - Cardinality: **Many to one (\*:1)**
-
-  - Cross filter direction: **Single**
-
-  - Leave the box next to **Make this relationship active** selected.
-
-  - Select **Ok.**
-
-![A screenshot of a computer Description automatically
-generated](./media/image195.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image196.png)
-
-6.  From the **fact\_Stocks\_Daily\_Prices** table, drag
-    the **Symbol\_SK** field and drop it on the **Symbol\_SK**  field
-    in the **dim\_Symbol** table to create a relationship. The **New
+6.  From the **fact_Stocks_Daily_Prices** table, drag
+    the **Symbol_SK** field and drop it on the **Symbol_SK**  field
+    in the **dim_Symbol** table to create a relationship. The **New
     relationship** dialog box appears.
 
-![A screenshot of a computer Description automatically
-generated](./media/image197.png)
+    ![](./media/image197.png)
 
 7.  In the **New relationship** dialog box:
 
-<!-- end list -->
+    - **From table** is populated with **fact_Stocks_Daily_Prices** and
+      the column of **Symbol_Sk.**
+  
+    - **To table** is populated with **dim_Symabol**  and the column of
+      **Symbol_Sk**
+  
+    - Cardinality: **Many to one (*:1)**
+  
+    - Cross filter direction: **Single**
+  
+    - Leave the box next to **Make this relationship active** selected.
+  
+    - Select **Ok.**
 
-  - **From table** is populated with **fact\_Stocks\_Daily\_Prices** and
-    the column of **Symbol\_Sk.**
-
-  - **To table** is populated with **dim\_Symabol**  and the column of
-    **Symbol\_Sk**
-
-  - Cardinality: **Many to one (\*:1)**
-
-  - Cross filter direction: **Single**
-
-  - Leave the box next to **Make this relationship active** selected.
-
-  - Select **Ok.**
-
-![A screenshot of a computer Description automatically
-generated](./media/image198.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image199.png)
+      ![](./media/image198.png)
+      
+      ![](./media/image199.png)
 
 ## Task 3. Create a simple report
 
-1.  Click on ***New Report*** to load the semantic model in Power BI.
+1.  Click on **New Report** to load the semantic model in Power BI.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image200.png)
+    ![](./media/image200png)
 
 2.  While we won't have much data yet to make much of a report,
     conceptually, we can build a report similar to below, which shows a
@@ -2079,39 +1853,33 @@ generated](./media/image199.png)
 3.  In the **Power BI** page, under **Visualizations**, click to the
     **Line chart** icon to add a **Column chart** to your report.
 
-<!-- end list -->
 
-  - On the **Data** pane, expand **fact\_Stocks\_Daily\_Prices**  and
-    check the box next to **PriceDateKey**. This creates a column chart
-    and adds the field to the **X-axis**.
+      - On the **Data** pane, expand **fact_Stocks_Daily_Prices**  and
+        check the box next to **PriceDateKey**. This creates a column chart
+        and adds the field to the **X-axis**.
+    
+      - On the **Data** pane, expand **fact_Stocks_Daily_Prices** and
+        check the box next to **ClosePrice**. This adds the field to the
+        **Y-axis.**
+    
+      - On the **Data** pane, expand **dim_Symbol** and check the box next
+        to **Symbol**. This adds the field to the **Legend**.
 
-  - On the **Data** pane, expand **fact\_Stocks\_Daily\_Prices** and
-    check the box next to **ClosePrice**. This adds the field to the
-    **Y-axis.**
+      ![](./media/image201.png)
 
-  - On the **Data** pane, expand **dim\_Symbol** and check the box next
-    to **Symbol**. This adds the field to the **Legend**.
+      ![](./media/image202.png)
 
-![A screenshot of a computer Description automatically
-generated](./media/image201.png)
+4.  From the ribbon, select **File** > Save.
 
-![A screenshot of a computer Description automatically
-generated](./media/image202.png)
+    ![](./media/image203.png)
 
-4.  From the ribbon, select **File** \> **Save.**
-
-![A screenshot of a computer Description automatically
-generated](./media/image203.png)
-
-5.  In the Save your report dialog box, enter +++ **semantic
-    report** +++ as the name of your report and select **your
+5.  In the Save your report dialog box, enter +++semantic
+    report+++ as the name of your report and select **your
     workspace**. Click on the **Save button**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image204.png)
-
-![A screenshot of a computer Description automatically
-generated](./media/image205.png)
+      ![](./media/image204.png)
+      
+      ![](./media/image205.png)
 
 ## Task 4:Clean up resources
 
@@ -2121,20 +1889,17 @@ workspace you created for this exercise.
 1.  In the bar on the left, select the icon for your workspace to view
     all of the items it contains.
 
-> ![](./media/image206.png)
+     ![](./media/image206.png)
 
 2.  In the **…** menu on the toolbar, select **Workspace settings**.
 
-![](./media/image207.png)
+    ![](./media/image207.png)
 
 3.  In the **General** section, select **Remove this workspace**.
 
-![A screenshot of a computer Description automatically
-generated](./media/image208.png)
-
-![A white background with black text Description automatically
-generated](./media/image209.png)
-
+      ![](./media/image208.png)
+      
+      ![](./media/image209.png)
 ## **Summary**
 
 In this lab, you’ve signed up for the Microsoft Fabric trial and
