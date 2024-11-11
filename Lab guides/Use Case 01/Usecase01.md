@@ -179,7 +179,7 @@ trial enabled.
      ![](./media/image18.png)
 
 2.  On the **New warehouse** dialog,
-    enter +++**WideWorldImporters+++** and click on the **Create**
+    enter +++WideWorldImporters+++ and click on the **Create**
     button.
 
      ![](./media/image19.png)
@@ -187,8 +187,7 @@ trial enabled.
 3.  When provisioning is complete, the **WideWorldImporters**
     warehouse landing page appears.
 
-     ![A screenshot of a computer Description automatically
-     generated](./media/image20.png)
+    ![](./media/image20.png)
 
 # Exercise 2: Ingest data into a Warehouse in Microsoft Fabric
 
