@@ -834,135 +834,96 @@ Fabric portal.
 1.  In the **WideWolrdImporters** page, from the **Home** tab of the
     ribbon, select **New visual query**.
 
-> ![](./media/image92.png)
+     ![](./media/image92.png)
 
 2.  Right-click on **fact\_sale** and select **Insert into canvas**
 
-> ![](./media/image93.png)
-> 
-> ![](./media/image94.png)
+     ![](./media/image93.png)
+    
+     ![](./media/image94.png)
 
 3.  Navigate to query design pane **transformations ribbon** and limit
     the dataset size by clicking on **Reduce rows** dropdown, then click
     on **Keep top rows** as shown in the below image.
 
-![](./media/image95.png)
+    ![](./media/image95.png)
 
 4.  In the **Keep top rows** dialog box, enter **10000** and
     Select **OK**.
 
-> ![](./media/image96.png)
-> 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image97.png)
+     ![](./media/image96.png)
+ 
+    ![](./media/image97.png)
 
 5.  Right-click on **dimension\_city**  and select **Insert into
     canvas**
 
-> ![](./media/image98.png)
-> 
-> ![](./media/image99.png)
+    ![](./media/image98.png)
+
+     ![](./media/image99.png)
 
 6.  From the transformations ribbon, select the dropdown beside
     **Combine** and select **Merge queries as new** as shown in the
     below image.
 
-![](./media/image100.png)
+    ![](./media/image100.png)
 
 7.  On the **Merge** settings page enter the following details.
 
-<!-- end list -->
+    •	In the **Left table for merge** dropdown, choose **dimension_city**
+    •	In the **Right table for merge** dropdown, choose **fact_sale** (use horizontal and vertical scroll bar)
+    •	Select the **CityKey** field in the **dimension_city** table by selecting on the column name in the header row to indicate the join column.
+    •	Select the **CityKey** field in the fact_sale table by selecting on the column name in the header row to indicate the join column.
+    •	In the **Join kind** diagram selection, choose Inner and click on the **Ok** button.
 
-  - In the **Left table for merge** dropdown, choose **dimension\_city**
-
-<!-- end list -->
-
-  - In the **Right table for merge** dropdown, choose **fact\_sale**
-    (use horizontal and vertical scroll bar)
-
-<!-- end list -->
-
-  - Select the **CityKey** field in the **dimension\_city** table by
-    selecting on the column name in the header row to indicate the join
-    column.
-
-<!-- end list -->
-
-  - Select the **CityKey** field in the **fact\_sale** table by
-    selecting on the column name in the header row to indicate the join
-    column.
-
-<!-- end list -->
-
-  - In the **Join kind** diagram selection, choose **Inner** and click
-    on the **Ok** button.
-
-![](./media/image101.png)
-
-![](./media/image102.png)
+      ![](./media/image101.png)
+      
+      ![](./media/image102.png)
 
 8.  With the **Merge** step selected, select the **Expand** button
-    beside **fact\_sale** on the header of the data grid as shown in the
+    beside **fact_sale** on the header of the data grid as shown in the
     below image, then select the columns **TaxAmount, Profit,
     TotalIncludingTax** and select **Ok.**
 
-![](./media/image103.png)
-
-![](./media/image104.png)
+      ![](./media/image103.png)
+      
+      ![](./media/image104.png)
 
 9.  In the **transformations ribbon,** click on the dropdown beside
     **Transform**, then select **Group by**.
 
-![](./media/image105.png)
+      ![](./media/image105.png)
 
 10. On the **Group by** settings page, enter the following details.
 
-<!-- end list -->
+    •	Select **Advanced** radio button.
+    •	Under **Group by** select the following: 
+    i.	**Country**
+    ii.	**StateProvince**
+    iii.	**City**
+    •	In the **New column name**, enter **SumOfTaxAmount** In **Operation** colum field, select **Sum**, then under Column field, select **TaxAmount**. Click on **Add aggregation** to add more aggregate column and operation.
+    •	In the **New column name**, enter **SumOfProfit** In **Operation** colum field, select **Sum**, then under Column field, select **Profit**. Click on **Add aggregation** to add more aggregate column and operation.
+    •	In the **New column name**, enter **SumOfTotalIncludingTax** In **Operation** colum field, select **Sum**, then under Column field, **TotalIncludingTax**. 
+    •	Click on the **OK** button	
 
-  - Select **Advanced** radio button.
-
-  - Under **Group by** select the following:
-    
-    1.  **Country**
-    
-    2.  **StateProvince**
-    
-    3.  **City**
-
-  - In the **New column name,** enter **SumOfTaxAmount** In
-    **Operation** colum field, select **Sum**, then under **Column**
-    field, select **TaxAmount.** Click on **Add aggregation** to add
-    more aggregate column and operation.
-
-  - In the **New column name,** enter **SumOfProfit** In **Operation**
-    colum field, select **Sum**, then under **Column** field, select
-    **Profit**. Click on **Add aggregation** to add more aggregate
-    column and operation.
-
-  - In the **New column name**, enter **SumOfTotalIncludingTax** In
-    **Operation** colum field, select **Sum**, then under **Column**
-    field, **TotalIncludingTax.** 
-
-  - Click on the **OK** button
-
-![](./media/image106.png)
-
-![](./media/image107.png)
+      ![](./media/image106.png)
+      
+      ![](./media/image107.png)
 
 11. In the explorer, navigate to **Queries** and right-click on **Visual
     query 1** under **Queries**. Then, select **Rename**.
 
-> ![](./media/image108.png)
+     ![](./media/image108.png)
 
-12. Type +++**Sales Summary+++** to change the name of the query.
+12. Type **+++Sales Summary+++** to change the name of the query.
     Press **Enter** on the keyboard or select anywhere outside the tab
     to save the change.
 
-> ![](./media/image109.png)
+     ![](./media/image109.png)
 
 13. Click on the **Refresh** icon below the **Home** tab.
 
-> ![](./media/image110.png)
+     ![](./media/image110.png)
 
 # Exercise 8: Analyze data with a notebook
 
@@ -976,78 +937,78 @@ access delta tables from external systems.
 First, we create a new lakehouse. To create a new lakehouse in your
 Microsoft Fabric workspace:
 
-1.  On the **WideWorldImportes** page, click on **Warehouse\_FabricXX**
+1.  On the **WideWorldImportes** page, click on **Warehouse_FabricXX**
     Workspace on the left-sided navigation
     menu.
 
-> ![](./media/image111.png)
+      ![](./media/image111.png)
 
 2.  On the **Synapse Data Engineering Warehouse\_FabricXX** home page, under the **Warehouse\_FabricXX** pane, click **+New item**, and then select **Lakehouse **under **Stored data**
 
-> ![](./media/image112.png)
+     ![](./media/image112.png)
 
-3.  In the **Name** field, enter +++**ShortcutExercise+++** and click on
+3.  In the **Name** field, enter **+++ShortcutExercise+++** and click on
     the **Create** button**.**
 
-> ![](./media/image113.png)
+     ![](./media/image113.png)
 
 4.  The new lakehouse loads and the **Explorer** view opens up, with
     the **Get data in your lakehouse** menu. Under **Load data in your
     lakehouse**, select the **New shortcut** button.
 
-> ![](./media/image114.png)
+     ![](./media/image114.png)
 
 5.  In the **New shortcut** window, select **Microsoft OneLake**.
 
-> ![](./media/image115.png)
+     ![](./media/image115.png)
 
 6.  In the **Select a data source type** window, carefully navigate and
     click on the **Warehouse** named **WideWorldImporters** that you’ve
     created previously, then click on the **Next** button**.**
 
-> ![](./media/image116.png)
+     ![](./media/image116.png)
 
 7.  In the **OneLake** object browser, expand **Tables**, then expand
     the **dbo** schema, and select the radio button
     beside **dimension\_customer**. Select the **Next** button.
 
-> ![](./media/image117.png)
+     ![](./media/image117.png)
 
 8.  In the **New shortcut** window, click on the **Create** button and
     click on the **Close** button
 
-> ![](./media/image118.png)
-> 
-> ![](./media/image119.png)
+     ![](./media/image118.png)
+   
+      ![](./media/image119.png)
 
 9.  Wait for a while and then click on the **Refresh** icon.
 
-10. Then, select the **dimension\_customer **in the **Table** list to
+10. Then, select the **dimension_customer** in the **Table** list to
     preview the data. Notice that the lakehouse is showing the data from
-    the **dimension\_customer** table from the Warehouse.
+    the **dimension_customer** table from the Warehouse.
 
-![](./media/image120.png)
+     ![](./media/image120.png)
 
 11. Next, create a new notebook to query
-    the **dimension\_customer** table. In the **Home** ribbon, select
+    the **dimension_customer** table. In the **Home** ribbon, select
     the drop down for **Open notebook** and choose **New notebook**.
 
-> ![](./media/image121.png)
+      ![](./media/image121.png)
 
-12. Select, then drag the **dimension\_customer** from
+12. Select, then drag the **dimension_customer** from
     the **Tables** list into the open notebook cell. You can see a
     **PySpark** query has been written for you to query all the data
-    from **ShortcutExercise.dimension\_customer**. This notebook
+    from **ShortcutExercise.dimension_customer**. This notebook
     experience is similar to Visual Studio Code Jupyter notebook
     experience. You can also open the notebook in VS Code.
 
-![](./media/image122.png)
+     ![](./media/image122.png)
 
 13. In the **Home** ribbon, select the **Run all** button. Once the
     query is completed, you will see you can easily use PySpark to query
     the Warehouse tables\!
 
-![](./media/image123.png)
+     ![](./media/image123.png)
 
 # Exercise 9:Create cross-warehouse queries with the SQL query editor
 
@@ -1059,25 +1020,25 @@ joining together data from a SQL Endpoint and a Warehouse in Microsoft
 Fabric.
 
 1.  From **Notebook1** page, navigate and click on
-    **Warehouse\_FabricXX** Workspace on the left-sided navigation menu.
+    **Warehouse_FabricXX** Workspace on the left-sided navigation menu.
 
-> ![](./media/image124.png)
+     ![](./media/image124.png)
 
-2.  In the **Warehouse\_FabricXX** view, select
+2.  In the **Warehouse_FabricXX** view, select
     the **WideWorldImporters** warehouse.
 
-> ![](./media/image125.png)
+     ![](./media/image125.png)
 
 3.  In the **WideWorldImporters** page, under **Explorer** tab, select
     the **+ Warehouses** button.
 
-> ![](./media/image126.png)
+      ![](./media/image126.png)
 
 4.  In Add warehouses window, select **ShortcutExercise** and click on
     the **Confirm** button. Both warehouse experiences are added to the
     query.
 
-![](./media/image127.png)
+    ![](./media/image127.png)
 
 5.  Your selected warehouses now show the same **Explorer** pane.
     
@@ -1092,42 +1053,34 @@ the database.schema.table, as in SQL Server.
 
 1.  From the **Home** tab of the ribbon, select **New SQL query**.
 
-> ![](./media/image129.png)
+    ![](./media/image129.png)
 
 2.  In the query editor, copy and paste the following T-SQL code. Select
     the **Run** button to execute the query. After the query is
     completed, you will see the results.
-
-> SQLCopy
-> 
-> SELECT Sales.StockItemKey,
-> 
-> Sales.Description,
-> 
-> SUM(CAST(Sales.Quantity AS int)) AS SoldQuantity,
-> 
-> c.Customer
-> 
-> FROM \[dbo\].\[fact\_sale\] AS Sales,
-> 
-> \[ShortcutExercise\].\[dbo\].\[dimension\_customer\] AS c
-> 
-> WHERE Sales.CustomerKey = c.CustomerKey
-> 
-> GROUP BY Sales.StockItemKey, Sales.Description, c.Customer;
-
-![](./media/image130.png)
+      ```
+      SELECT Sales.StockItemKey, 
+      Sales.Description, 
+      SUM(CAST(Sales.Quantity AS int)) AS SoldQuantity, 
+      c.Customer
+      FROM [dbo].[fact_sale] AS Sales,
+      [ShortcutExercise].[dbo].[dimension_customer] AS c
+      WHERE Sales.CustomerKey = c.CustomerKey
+      GROUP BY Sales.StockItemKey, Sales.Description, c.Customer;
+      ```
+      
+      ![](./media/image130.png)
 
 3.  Rename the query for reference. Right-click on **SQL query** in the
     **Explorer** and select **Rename**.
 
-> ![](./media/image131.png)
+    ![](./media/image131.png)
 
 4.  In the **Rename** dialog box, under the **Name** field, enter
-    +++**Cross-warehouse query+++**, then click on the **Rename**
+    **+++Cross-warehouse query+++**, then click on the **Rename**
     button. 
 
-> ![](./media/image132.png)
+     ![](./media/image132.png)
 
 # Exercise 10: Create Power BI reports
 
@@ -1142,40 +1095,39 @@ the database.schema.table, as in SQL Server.
 
 2.  On right side of Power BI home page, click on the **Settings** icon.
 
-![](./media/image134.png)
+    ![](./media/image134.png)
 
 In case, you did not see the **Settings** icon, then click on the
 horizontal ellipsis on the top right side of the page, then navigate and
 click on **Settings** as shown in the below image.
 
-![](./media/image135.png)
+    ![](./media/image135.png)
 
 3.  In **Settings** pane, scroll down to **Governance and insights**,
     then click on **Admin portal** .
 
-![](./media/image136.png)
+    ![](./media/image136.png)
 
 4.  In **Admin portal** pane, select **Tenant settings**, scroll down to
     **Integration settings** section, click on **Use Azure Maps
     visual**, then enable it using the **toggle** button. After **Use
     Azure Maps visual** were Enabled, click on the **Apply** button.
 
-![](./media/image137.png)
-
-![](./media/image138.png)
+    ![](./media/image137.png)
+    
+    ![](./media/image138.png)
 
 5.  You will see a notification stating - **Applying changes.** It will
     take approximately 15 minutes for implemting the tenant settings.
     
-    ![A screenshot of a computer Description automatically
-    generated](./media/image139.png)
+      ![](./media/image139.png)
 
 6.  In **Admin portal** pane, select **Tenant settings**, scroll down to
     **Integration settings** section, click on **Map and filled map
     visuals**, then enable it using the **toggle** button. After **Use
     Azure Maps visual** were Enabled, click on the **Apply** button.
 
-![](./media/image140.png)
+    ![](./media/image140.png)
 
 ## Task 2: Create Power BI reports
 
@@ -1185,64 +1137,63 @@ reports.
 1.  In the **WideWorldImportes** page, under the **Home** tab, select
     the **Model** view .
 
-> ![](./media/image141.png)
+     ![](./media/image141.png)
 
 2.  From the **fact\_sale** table, drag the **CityKey** field and drop
     it onto the **CityKey** field in the **dimension\_city** table to
     create a relationship.
 
-![](./media/image142.png)
+    ![](./media/image142.png)
 
 3.  On the **Create Relationship** settings:
 
-<!-- end list -->
 
-  - **Table 1** is populated with **fact\_sale** and the column
-    of **CityKey**.
+    - **Table 1** is populated with **fact_sale** and the column
+      of **CityKey**.
+  
+    - **Table 2** is populated with **dimension_city** and the column
+      of **CityKey**.
+  
+    - **Cardinality**: select **Many to one (*:1)**.
+  
+    - **Cross filter direction**: select **Single**.
+  
+    - Check the box for **Make this relationship active**.
+  
+    - Select **Save**.
 
-  - **Table 2** is populated with **dimension\_city** and the column
-    of **CityKey**.
-
-  - **Cardinality**: select **Many to one (\*:1)**.
-
-  - **Cross filter direction**: select **Single**.
-
-  - Check the box for **Make this relationship active**.
-
-  - Select **Save**.
-
-![](./media/image143.png)
-
-![](./media/image144.png)
+    ![](./media/image143.png)
+    
+    ![](./media/image144.png)
 
 4.  From the **Reporting** tab of the ribbon, select **New report**.
 
-> ![](./media/image145.png)
-> 
-> ![](./media/image146.png)
+     ![](./media/image145.png)
+     
+     ![](./media/image146.png)
 
 5.  In the **Synapse Data Engineering Warehouse\_FabricXX** page,
     under **Visualizations**, click to the **Column chart** icon to add
     a **Column chart** to your report.
 
-<!-- end list -->
+    
 
-  - On the **Data** pane, expand **fact\_sales** and check the box next
-    to **Profit**. This creates a column chart and adds the field to the
-    Y-axis.
+      - On the **Data** pane, expand **fact_sales** and check the box next
+        to **Profit**. This creates a column chart and adds the field to the
+        Y-axis.
+    
+      - On the **Data** pane, expand **dimension_city** and check the box
+        next to **SalesTerritory**. This adds the field to the X-axis.
+    
+      - Reposition and resize the column chart to take up the top left
+        quarter of the canvas by dragging the anchor points on the corners
+        of the visual.
 
-  - On the **Data** pane, expand **dimension\_city** and check the box
-    next to **SalesTerritory**. This adds the field to the X-axis.
-
-  - Reposition and resize the column chart to take up the top left
-    quarter of the canvas by dragging the anchor points on the corners
-    of the visual.
-
-![](./media/image147.png)
-
-![](./media/image148.png)
-
-![](./media/image149.png)
+      ![](./media/image147.png)
+      
+      ![](./media/image148.png)
+      
+      ![](./media/image149.png)
 
 6.  Select anywhere on the blank canvas (or press the Esc key) so the
     column chart visual is no longer selected.
@@ -1250,28 +1201,27 @@ reports.
 7.  Build a **Maps** visual,On the **Visualizations** pane, select
     the **ArcGIS Maps for Power BI** visual.
 
-> ![](./media/image150.png)
+     ![](./media/image150.png)
 
 8.  From the **Data** pane, drag **StateProvince** from
-    the **dimension\_city** table to the **Location** bucket on
+    the **dimension_city** table to the **Location** bucket on
     the **Visualizations** pane.
 
-> ![](./media/image151.png)
+     ![](./media/image151.png)
 
 9.  From the **Data** pane, drag **Profit** from
-    the **fact\_sale** table to the **Size** bucket on
+    the **fact_sale** table to the **Size** bucket on
     the **Visualizations** pane.
 
-> ![](./media/image152.png)
+    ![](./media/image152.png)
 
 10. If necessary, reposition and resize the map to take up the bottom
     left quarter of the canvas by dragging the anchor points on the
     corners of the visual.
 
-> ![A map of the world with blue dots Description automatically
-> generated](./media/image153.png)
+    ![](./media/image153.png)
 
-![](./media/image154.png)
+    ![](./media/image154.png)
 
 11. Select anywhere on the blank canvas (or press the Esc key) so the
     map visual is no longer selected.
@@ -1279,43 +1229,43 @@ reports.
 12. Build a **Table** visual on the **Visualizations** pane, select
     the **Table** visual.
 
-> ![](./media/image155.png)
+     ![](./media/image155.png)
 
 13. From the **Data** pane, check the box next to **SalesTerritory** on
-    the **dimension\_city** table.
+    the **dimension_city** table.
 
 14. From the **Data** pane, check the box next to **StateProvince** on
-    the **dimension\_city** table.
+    the **dimension_city** table.
 
-> ![](./media/image156.png)
+     ![](./media/image156.png)
 
 15. From the **Data** pane, check the box next to **Profit** on
-    the **fact\_sale** table.
+    the **fact_sale** table.
 
 16. From the **Data** pane, check the box next
-    to **TotalExcludingTax** on the **fact\_sale** table.
+    to **TotalExcludingTax** on the **fact_sale** table.
 
-![](./media/image157.png)
+    ![](./media/image157.png)
 
 17. Reposition and resize the column chart to take up the right half of
     the canvas by dragging the anchor points on the corners of the
     visual.
 
-![](./media/image158.png)
+    ![](./media/image158.png)
 
 18. In the Synapse Data Engineering Warehouse\_FabricXX page, from the
     ribbon, select **File** and select the **Save**.
 
-> ![](./media/image159.png)
+      ![](./media/image159.png)
 
-19. In the Save your report dialog box, enter +++**Sales Analysis+++**
+19. In the Save your report dialog box, enter **+++Sales Analysis+++**
     as the name of your report and click on the **Save** button.
 
-> ![](./media/image160.png)
+      ![](./media/image160.png)
 
 20. You will see a notification stating **Report saved.**
 
-> ![](./media/image161.png)
+    ![](./media/image161.png)
 
 ## Task 3: Build a report from the OneLake data hub
 
@@ -1325,40 +1275,39 @@ Warehouse in the last step.
 1.  In the **Sales Analysis** pane, select the **OneLake data hub** in
     the left navigation menu.
 
-> ![](./media/image162.png)
+     ![](./media/image162.png)
 
 2.  From the item list, select **WideWorldImporters** with the type
     of **Dataset (default)**.
 
-> ![](./media/image163.png)
+    ![](./media/image163.png)
 
 3.  In the **Visualize this data** section, select **Create a
     report** and select **Auto-create**. A report is generated from
-    the **dimension\_customer** table that was loaded in the previous
+    the **dimension_customer** table that was loaded in the previous
     section.
 
-![](./media/image164.png)
+     ![](./media/image164.png)
 
 4.  A report similar to the following image is generated.
 
-![](./media/image165.png)
+     ![](./media/image165.png)
 
 5.  From the ribbon, select **Save**.
 
-> ![](./media/image166.png)
+     ![](./media/image166.png)
 
-6.  In the **Save your report** dialog box, enter +++**Customer Quick
+6.  In the **Save your report** dialog box, enter **+++Customer Quick
     Summary+++** in the name box. In the **Save your report** dialogue,
     select **Save**.
 
-> ![](./media/image167.png)
+     ![](./media/image167.png)
 
 7.  You will see a notification stating **Report saved.**
 
-> ![A screenshot of a phone Description automatically
-> generated](./media/image168.png)
-> 
-> ![](./media/image169.png)
+     ![](./media/image168.png)
+ 
+     ![](./media/image169.png)
 
 ## Task 4: Clean up resources
 
@@ -1367,22 +1316,23 @@ items or remove the entire workspace. In this tutorial, you will clean
 up the workspace, individual reports, pipelines, warehouses, and other
 items you created as part of the lab.
 
-1.  Select **Warehouse\_FabricXX** in the navigation menu to return to
+1.  Select **Warehouse_FabricXX** in the navigation menu to return to
     the workspace item list.
 
-> ![](./media/image170.png)
+     ![](./media/image170.png)
 
 2.  In the menu of the workspace header, select **Workspace settings**.
 
-> ![](./media/image171.png)
+      ![](./media/image171.png)
 
 3.  In the **Workspace settings** dialog box, select **Other** and
     select the **Remove this workspace**.
 
-> ![](./media/image172.png)
+      ![](./media/image172.png)
 
 4.  In the **Delete workspace?** dialog box, click on the **Delete**
-    button. ![](./media/image173.png)
+    button.
+    ![](./media/image173.png)
 
 **Summary**
 
