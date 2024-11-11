@@ -31,10 +31,10 @@ Fabric professional and citizen developer experiences.
   - Establish a new Warehouse named WideWorldImporters in Microsoft
     Fabric.
 
-  - Load data into the Warehouse\_FabricXX workspace using a Data
+  - Load data into the Warehouse_FabricXX workspace using a Data
     Factory pipeline.
 
-  - Generate dimension\_city and fact\_sale tables within the data
+  - Generate dimension_city and fact_sale tables within the data
     warehouse.
 
   - Populate dimension\_city and fact\_sale tables with data from Azure
