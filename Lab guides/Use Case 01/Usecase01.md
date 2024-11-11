@@ -587,115 +587,101 @@ Learn how to create and save a new stored procedure to transform
 
 1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
 
-> ![](./media/image50.png)
+     ![](./media/image50.png)
 
 2.  In the query editor, **paste** the following code to create the
-    stored procedure **dbo.populate\_aggregate\_sale\_by\_city**. This
+    stored procedure **dbo.populate_aggregate_sale_by_city**. This
     stored procedure will create and load
-    the **dbo.aggregate\_sale\_by\_date\_city** table in a later step.
+    the **dbo.aggregate_sale_by_date_city** table in a later step.
        SQLCopy
-      ```
-      /*
-      1. Drop the dimension_city table if it already exists.
-      2. Create the dimension_city table.
-      3. Drop the fact_sale table if it already exists.
-      4. Create the fact_sale table.
-      */
-      
-      --dimension_city
-      DROP TABLE IF EXISTS [dbo].[dimension_city];
-      CREATE TABLE [dbo].[dimension_city]
-          (
-              [CityKey] [int] NULL,
-              [WWICityID] [int] NULL,
-              [City] [varchar](8000) NULL,
-              [StateProvince] [varchar](8000) NULL,
-              [Country] [varchar](8000) NULL,
-              [Continent] [varchar](8000) NULL,
-              [SalesTerritory] [varchar](8000) NULL,
-              [Region] [varchar](8000) NULL,
-              [Subregion] [varchar](8000) NULL,
-              [Location] [varchar](8000) NULL,
-              [LatestRecordedPopulation] [bigint] NULL,
-              [ValidFrom] [datetime2](6) NULL,
-              [ValidTo] [datetime2](6) NULL,
-              [LineageKey] [int] NULL
-          );
-      
-      --fact_sale
-      
-      DROP TABLE IF EXISTS [dbo].[fact_sale];
-      
-      CREATE TABLE [dbo].[fact_sale]
-      
-          (
-              [SaleKey] [bigint] NULL,
-              [CityKey] [int] NULL,
-              [CustomerKey] [int] NULL,
-              [BillToCustomerKey] [int] NULL,
-              [StockItemKey] [int] NULL,
-              [InvoiceDateKey] [datetime2](6) NULL,
-              [DeliveryDateKey] [datetime2](6) NULL,
-              [SalespersonKey] [int] NULL,
-              [WWIInvoiceID] [int] NULL,
-              [Description] [varchar](8000) NULL,
-              [Package] [varchar](8000) NULL,
-              [Quantity] [int] NULL,
-              [UnitPrice] [decimal](18, 2) NULL,
-              [TaxRate] [decimal](18, 3) NULL,
-              [TotalExcludingTax] [decimal](29, 2) NULL,
-              [TaxAmount] [decimal](38, 6) NULL,
-              [Profit] [decimal](18, 2) NULL,
-              [TotalIncludingTax] [decimal](38, 6) NULL,
-              [TotalDryItems] [int] NULL,
-              [TotalChillerItems] [int] NULL,
-              [LineageKey] [int] NULL,
-              [Month] [int] NULL,
-              [Year] [int] NULL,
-              [Quarter] [int] NULL
-          );
-      ```
+     ```
+         --Drop the stored procedure if it already exists.
+    DROP PROCEDURE IF EXISTS [dbo].[populate_aggregate_sale_by_city]
+    GO
+    
+    --Create the populate_aggregate_sale_by_city stored procedure.
+    CREATE PROCEDURE [dbo].[populate_aggregate_sale_by_city]
+    AS
+    BEGIN
+        --If the aggregate table already exists, drop it. Then create the table.
+        DROP TABLE IF EXISTS [dbo].[aggregate_sale_by_date_city];
+        CREATE TABLE [dbo].[aggregate_sale_by_date_city]
+            (
+                [Date] [DATETIME2](6),
+                [City] [VARCHAR](8000),
+                [StateProvince] [VARCHAR](8000),
+                [SalesTerritory] [VARCHAR](8000),
+                [SumOfTotalExcludingTax] [DECIMAL](38,2),
+                [SumOfTaxAmount] [DECIMAL](38,6),
+                [SumOfTotalIncludingTax] [DECIMAL](38,6),
+                [SumOfProfit] [DECIMAL](38,2)
+            );
+    
+        --Reload the aggregated dataset to the table.
+        INSERT INTO [dbo].[aggregate_sale_by_date_city]
+        SELECT
+            FS.[InvoiceDateKey] AS [Date], 
+            DC.[City], 
+            DC.[StateProvince], 
+            DC.[SalesTerritory], 
+            SUM(FS.[TotalExcludingTax]) AS [SumOfTotalExcludingTax], 
+            SUM(FS.[TaxAmount]) AS [SumOfTaxAmount], 
+            SUM(FS.[TotalIncludingTax]) AS [SumOfTotalIncludingTax], 
+            SUM(FS.[Profit]) AS [SumOfProfit]
+        FROM [dbo].[fact_sale] AS FS
+        INNER JOIN [dbo].[dimension_city] AS DC
+            ON FS.[CityKey] = DC.[CityKey]
+        GROUP BY
+            FS.[InvoiceDateKey],
+            DC.[City], 
+            DC.[StateProvince], 
+            DC.[SalesTerritory]
+        ORDER BY 
+            FS.[InvoiceDateKey], 
+            DC.[StateProvince], 
+            DC.[City];
+    END
+    ```
   
-> ![](./media/image72.png)
-> 
-> ![](./media/image73.png)
+     ![](./media/image72.png)
+  
+     ![](./media/image73.png)
 
 3.  Right-click on SQL query that you’ve created to clone the tables in
     the Explorer and select **Rename**.
 
-> ![](./media/image74.png)
+    ![](./media/image74.png)
 
 4.  In the **Rename** dialog box, under the **Name** field, enter
-    +++**Create Aggregate Procedure+++**, then click on the **Rename**
+    +++Create Aggregate Procedure+++, then click on the **Rename**
     button.
 
-> ![](./media/image75.png)
+     ![](./media/image75.png)
 
 5.  Click on the **Refresh icon** below the **Home** tab.
 
-> ![](./media/image76.png)
+     ![](./media/image76.png)
 
 6.  In the **Explorer** tab, verify that you can see the newly created
     stored procedure by expanding the **StoredProcedures** node under
     the **dbo** schema.
 
-> ![](./media/image77.png)
+     ![](./media/image77.png)
 
 7.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
 
-> ![](./media/image50.png)
+      ![](./media/image50.png)
 
 8.  In the query editor, paste the following code. This T-SQL executes
-    **dbo.populate\_aggregate\_sale\_by\_city** to create the
-    **dbo.aggregate\_sale\_by\_date\_city** table.Run the query
+    **dbo.populate_aggregate_sale_by_city** to create the
+    **dbo.aggregate_sale_by_date_city** table.Run the query
 
-SQLCopy
-
-> \--Execute the stored procedure to create the aggregate table.
-> 
-> EXEC \[dbo\].\[populate\_aggregate\_sale\_by\_city\];
-> 
-> ![](./media/image78.png)
+      SQLCopy
+      ```
+      --Execute the stored procedure to create the aggregate table.
+      EXEC [dbo].[populate_aggregate_sale_by_city];
+      ```
+     ![](./media/image78.png)
 
 9.  To save this query for reference later, right-click on the query tab
     just above the editor and select **Rename.**
@@ -703,7 +689,7 @@ SQLCopy
     ![](./media/image79.png)
 
 10. In the **Rename** dialog box, under the **Name** field, enter
-    +++**Run** **Create Aggregate Procedure+++**, then click on the
+   **+++Run Create Aggregate Procedure+++**, then click on the
     **Rename** button.
     
     ![](./media/image80.png)
@@ -714,7 +700,7 @@ SQLCopy
 
 12. In the Object **Explorer** tab, load the data preview to validate
     the data loaded successfully by selecting on
-    the **aggregate\_sale\_by\_city** table in
+    the **aggregate_sale_by_city** table in
     the **Explorer**.
     
     ![](./media/image82.png)
@@ -723,41 +709,28 @@ SQLCopy
 
 1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
 
-> ![](./media/image50.png)
+     ![](./media/image50.png)
 
 2.  In the query editor, paste the following code to create the
     view Top10CustomerView. Select **Run** to execute the query.
-    
-    CREATE VIEW dbo.Top10CustomersView
-    
+
+    ```    
+       CREATE VIEW dbo.Top10CustomersView
     AS
-    
     SELECT TOP (10)
-    
-        FS.\[CustomerKey\],
-    
-        DC.\[Customer\],
-    
-        SUM(FS.TotalIncludingTax) AS TotalSalesAmount
-    
+        FS.[CustomerKey],
+        DC.[Customer],
+        SUM(FS.TotalIncludingTax) AS TotalSalesAmount
     FROM
-    
-        \[dbo\].\[dimension\_customer\] AS DC
-    
+        [dbo].[dimension_customer] AS DC
     INNER JOIN
-    
-        \[dbo\].\[fact\_sale\] AS FS ON DC.\[CustomerKey\] =
-    FS.\[CustomerKey\]
-    
+        [dbo].[fact_sale] AS FS ON DC.[CustomerKey] = FS.[CustomerKey]
     GROUP BY
-    
-        FS.\[CustomerKey\],
-    
-        DC.\[Customer\]
-    
+        FS.[CustomerKey],
+        DC.[Customer]
     ORDER BY
-    
-        TotalSalesAmount DESC;
+        TotalSalesAmount DESC;
+    ```
     
     ![](./media/image83.png)
 
@@ -772,10 +745,10 @@ SQLCopy
     
     ![](./media/image85.png)
 
-5.  In the **Rename** dialog box, under the **Name** field, enter +++
-    **Top10CustomersView+++**, then click on the **Rename** button.
+5.  In the **Rename** dialog box, under the **Name** field, enter 
+    **+++Top10CustomersView+++**, then click on the **Rename** button.
     
-    ![](./media/image86.png)
+     ![](./media/image86.png)
 
 6.  Create another new query, similar to Step 1. From the **Home** tab
     of the ribbon, select **New SQL query**.
@@ -788,36 +761,32 @@ SQLCopy
     Select **Run** to execute the query.
     
     SQLCopy
+      ```
+      /*Update the TotalIncludingTax value of the record with SaleKey value of 22632918*/
+      UPDATE [dbo].[fact_sale]
+      SET TotalIncludingTax = 200000000
+      WHERE SaleKey = 22632918;
+      ```
     
-    /\*Update the TotalIncludingTax value of the record with SaleKey
-    value of 22632918\*/
-    
-    UPDATE \[dbo\].\[fact\_sale\]
-    
-    SET TotalIncludingTax = 200000000
-    
-    WHERE SaleKey = 22632918;
-    
-    ![](./media/image87.png)
+     ![](./media/image87.png)
 
 8.  In the query editor, paste the following code.
     The CURRENT\_TIMESTAMP T-SQL function returns the current UTC
     timestamp as a **datetime**. Select **Run** to execute the query.
     
-    SQLCopy
-    
-    SELECT CURRENT\_TIMESTAMP;
-    
-    ![](./media/image88.png)
+      SQLCopy
+      ```
+      SELECT CURRENT_TIMESTAMP;
+      ```
+      ![](./media/image88.png)
 
 9.  Copy the timestamp value returned to your clipboard.
-    
-    ![](./media/image89.png)
+      ![](./media/image89.png)
 
 10. Paste the following code in the query editor and replace the
     timestamp value with the current timestamp value obtained from the
     prior step. The timestamp syntax format
-    is **YYYY-MM-DDTHH:MM:SS\[.FFF\].**
+    is **YYYY-MM-DDTHH:MM:SS[.FFF]**
 
 11. Remove the trailing zeroes, for
     example: **2024-04-24T20:59:06.097**.
@@ -828,18 +797,16 @@ SQLCopy
     following code and select **Run** to execute the query.
     
     SQLCopy
-    
-    /\*View of Top10 Customers as of today after record updates\*/
-    
-    SELECT \*
-    
-    FROM \[WideWorldImporters\].\[dbo\].\[Top10CustomersView\]
-    
+    ```
+   /*View of Top10 Customers as of today after record updates*/
+    SELECT *
+    FROM [WideWorldImporters].[dbo].[Top10CustomersView]
     OPTION (FOR TIMESTAMP AS OF '2024-04-24T20:59:06.097');
-    
-    ![](./media/image90.png)
+    ```
 
-13. Paste the following code in the query editor and replace the
+   ![](./media/image90.png)
+
+14. Paste the following code in the query editor and replace the
     timestamp value to a time prior to executing the update script to
     update the **TotalIncludingTax** value. This would return the list
     of top ten customers *before* the **TotalIncludingTax** was updated
