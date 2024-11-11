@@ -225,8 +225,8 @@ trial enabled.
 6.  Select the newly created **Copy data** **1** activity from the
     design canvas to configure it.
 
- **Note**: Drag the horizonal line in the design canvas to have a
- complete view of various features.
+   **Note**: Drag the horizonal line in the design canvas to have a
+   complete view of various features.
     ![](./media/image27.png)
 
 7.  On the **General** tab, in the **Name** field**,** enter +++**CD
@@ -322,120 +322,70 @@ trial enabled.
 
 4.  In the query editor, paste the following code and select **Run** to
     execute the query
+    ```
+    /*
+    1. Drop the dimension_city table if it already exists.
+    2. Create the dimension_city table.
+    3. Drop the fact_sale table if it already exists.
+    4. Create the fact_sale table.
+    */
+    
+    --dimension_city
+    DROP TABLE IF EXISTS [dbo].[dimension_city];
+    CREATE TABLE [dbo].[dimension_city]
+        (
+            [CityKey] [int] NULL,
+            [WWICityID] [int] NULL,
+            [City] [varchar](8000) NULL,
+            [StateProvince] [varchar](8000) NULL,
+            [Country] [varchar](8000) NULL,
+            [Continent] [varchar](8000) NULL,
+            [SalesTerritory] [varchar](8000) NULL,
+            [Region] [varchar](8000) NULL,
+            [Subregion] [varchar](8000) NULL,
+            [Location] [varchar](8000) NULL,
+            [LatestRecordedPopulation] [bigint] NULL,
+            [ValidFrom] [datetime2](6) NULL,
+            [ValidTo] [datetime2](6) NULL,
+            [LineageKey] [int] NULL
+        );
+    
+    --fact_sale
+    
+    DROP TABLE IF EXISTS [dbo].[fact_sale];
+    
+    CREATE TABLE [dbo].[fact_sale]
+    
+        (
+            [SaleKey] [bigint] NULL,
+            [CityKey] [int] NULL,
+            [CustomerKey] [int] NULL,
+            [BillToCustomerKey] [int] NULL,
+            [StockItemKey] [int] NULL,
+            [InvoiceDateKey] [datetime2](6) NULL,
+            [DeliveryDateKey] [datetime2](6) NULL,
+            [SalespersonKey] [int] NULL,
+            [WWIInvoiceID] [int] NULL,
+            [Description] [varchar](8000) NULL,
+            [Package] [varchar](8000) NULL,
+            [Quantity] [int] NULL,
+            [UnitPrice] [decimal](18, 2) NULL,
+            [TaxRate] [decimal](18, 3) NULL,
+            [TotalExcludingTax] [decimal](29, 2) NULL,
+            [TaxAmount] [decimal](38, 6) NULL,
+            [Profit] [decimal](18, 2) NULL,
+            [TotalIncludingTax] [decimal](38, 6) NULL,
+            [TotalDryItems] [int] NULL,
+            [TotalChillerItems] [int] NULL,
+            [LineageKey] [int] NULL,
+            [Month] [int] NULL,
+            [Year] [int] NULL,
+            [Quarter] [int] NULL
+        );
+    ```
+    ![](./media/image44.png)
 
-> SQLCopy
-> 
-> /\*
-> 
-> 1\. Drop the dimension\_city table if it already exists.
-> 
-> 2\. Create the dimension\_city table.
-> 
-> 3\. Drop the fact\_sale table if it already exists.
-> 
-> 4\. Create the fact\_sale table.
-> 
-> \*/
-> 
-> \--dimension\_city
-> 
-> DROP TABLE IF EXISTS \[dbo\].\[dimension\_city\];
-> 
-> CREATE TABLE \[dbo\].\[dimension\_city\]
-> 
-> (
-> 
-> \[CityKey\] \[int\] NULL,
-> 
-> \[WWICityID\] \[int\] NULL,
-> 
-> \[City\] \[varchar\](8000) NULL,
-> 
-> \[StateProvince\] \[varchar\](8000) NULL,
-> 
-> \[Country\] \[varchar\](8000) NULL,
-> 
-> \[Continent\] \[varchar\](8000) NULL,
-> 
-> \[SalesTerritory\] \[varchar\](8000) NULL,
-> 
-> \[Region\] \[varchar\](8000) NULL,
-> 
-> \[Subregion\] \[varchar\](8000) NULL,
-> 
-> \[Location\] \[varchar\](8000) NULL,
-> 
-> \[LatestRecordedPopulation\] \[bigint\] NULL,
-> 
-> \[ValidFrom\] \[datetime2\](6) NULL,
-> 
-> \[ValidTo\] \[datetime2\](6) NULL,
-> 
-> \[LineageKey\] \[int\] NULL
-> 
-> );
-> 
-> \--fact\_sale
-> 
-> DROP TABLE IF EXISTS \[dbo\].\[fact\_sale\];
-> 
-> CREATE TABLE \[dbo\].\[fact\_sale\]
-> 
-> (
-> 
-> \[SaleKey\] \[bigint\] NULL,
-> 
-> \[CityKey\] \[int\] NULL,
-> 
-> \[CustomerKey\] \[int\] NULL,
-> 
-> \[BillToCustomerKey\] \[int\] NULL,
-> 
-> \[StockItemKey\] \[int\] NULL,
-> 
-> \[InvoiceDateKey\] \[datetime2\](6) NULL,
-> 
-> \[DeliveryDateKey\] \[datetime2\](6) NULL,
-> 
-> \[SalespersonKey\] \[int\] NULL,
-> 
-> \[WWIInvoiceID\] \[int\] NULL,
-> 
-> \[Description\] \[varchar\](8000) NULL,
-> 
-> \[Package\] \[varchar\](8000) NULL,
-> 
-> \[Quantity\] \[int\] NULL,
-> 
-> \[UnitPrice\] \[decimal\](18, 2) NULL,
-> 
-> \[TaxRate\] \[decimal\](18, 3) NULL,
-> 
-> \[TotalExcludingTax\] \[decimal\](29, 2) NULL,
-> 
-> \[TaxAmount\] \[decimal\](38, 6) NULL,
-> 
-> \[Profit\] \[decimal\](18, 2) NULL,
-> 
-> \[TotalIncludingTax\] \[decimal\](38, 6) NULL,
-> 
-> \[TotalDryItems\] \[int\] NULL,
-> 
-> \[TotalChillerItems\] \[int\] NULL,
-> 
-> \[LineageKey\] \[int\] NULL,
-> 
-> \[Month\] \[int\] NULL,
-> 
-> \[Year\] \[int\] NULL,
-> 
-> \[Quarter\] \[int\] NULL
-> 
-> );
-> 
-> ![](./media/image44.png)
-> 
-> ![](./media/image45.png)
+    ![](./media/image45.png)
 
 5.  To save this query, right-click on the **SQL query 1** tab just
     above the editor and select **Rename**.
@@ -443,7 +393,7 @@ trial enabled.
       ![](./media/image46.png)
 
 6.  In the **Rename** dialog box, under **Name** field, enter
-    +++**Create Tables+++** to change the name of **SQL query 1**. Then,
+    **+++Create Tables+++** to change the name of **SQL query 1**. Then,
     click on the **Rename** button.
 
      ![](./media/image47.png)
@@ -451,12 +401,12 @@ trial enabled.
 7.  Validate the table was created successfully by selecting the
     **refresh icon** button on the ribbon.
 
-> ![](./media/image48.png)
+    ![](./media/image48.png)
 
 8.  In the **Explorer** pane, you’ll see the **fact\_sale** table
     and **dimension\_city** table.
 
-> ![](./media/image49.png)
+    ![](./media/image49.png)
 
 ## Task 2: Load data using T-SQL
 
@@ -467,60 +417,49 @@ methods for loading
 
 1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
 
-> ![](./media/image50.png)
+    ![](./media/image50.png)
 
 2.  In the query editor, **paste** the following code, then click on
     **Run** to execute the query.
 
-> SQLCopy
-> 
-> \--Copy data from the public Azure storage account to the
-> dbo.dimension\_city table.
-> 
-> COPY INTO \[dbo\].\[dimension\_city\]
-> 
-> FROM
-> 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/dimension\_city.parquet'
-> 
-> WITH (FILE\_TYPE = 'PARQUET');
-> 
-> \--Copy data from the public Azure storage account to the
-> dbo.fact\_sale table.
-> 
-> COPY INTO \[dbo\].\[fact\_sale\]
-> 
-> FROM
-> 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/fact\_sale.parquet'
-> 
-> WITH (FILE\_TYPE = 'PARQUET');
-> 
-> ![](./media/image51.png)
+   SQLCopy
+    ```
+    --Copy data from the public Azure storage account to the dbo.dimension_city table.
+    COPY INTO [dbo].[dimension_city]
+    FROM 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/dimension_city.parquet'
+    WITH (FILE_TYPE = 'PARQUET');
+    
+    --Copy data from the public Azure storage account to the dbo.fact_sale table.
+    COPY INTO [dbo].[fact_sale]
+    FROM 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/fact_sale.parquet'
+    WITH (FILE_TYPE = 'PARQUET');
+    ```
+    ![](./media/image51.png)
 
 3.  After the query is completed, review the messages, which indicats
-    the number of rows that were loaded into the **dimension\_city** and
-    **fact\_sale** tables respectively.
+    the number of rows that were loaded into the **dimension_city** and
+    **fact_sale** tables respectively.
 
-> ![](./media/image52.png)
+    ![](./media/image52.png)
 
 4.  Load the data preview to validate the data loaded successfully by
-    selecting on the **fact\_sale** table in the **Explorer**.
+    selecting on the **fact_sale** table in the **Explorer**.
 
-> ![](./media/image53.png)
+    ![](./media/image53.png)
 
 5.  Rename the query. Right-click on **SQL query 1** in
     the **Explorer**, then select **Rename**.
-
-> ![](./media/image54.png)
+    ![](./media/image54.png)
 
 6.  In the **Rename** dialog box, under the **Name** field, enter
-    +++**Load Tables+++**. Then, click on **Rename** button.
+    **+++Load Tables+++**. Then, click on **Rename** button.
 
-> ![](./media/image55.png)
+    ![](./media/image55.png)
 
 7.  Click on the **Refresh** icon in the command bar below the **Home**
     tab.
 
-![](./media/image56.png)
+    ![](./media/image56.png)
 
 # **Exercise 4: Clone a table using T-SQL in Microsoft Fabric**
 
@@ -532,116 +471,106 @@ Warehouse in Microsoft Fabric, using the [CREATE TABLE AS CLONE
 OF](https://learn.microsoft.com/en-us/sql/t-sql/statements/create-table-as-clone-of-transact-sql?view=fabric&preserve-view=true) T-SQL
 syntax.
 
-1.  Create a table clone within the same schema in a
-    warehouse.
+1.  Create a table clone within the same schema in a warehouse.
 
-2.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
+2.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**. 
 
-> ![](./media/image50.png)
+     ![](./media/image50.png)
 
 3.  In the query editor, paste the following code to create clones of
     the **dbo.dimension\_city** and **dbo.fact\_sale** tables.
 
-> SQLCopy
-> 
-> \--Create a clone of the dbo.dimension\_city table.
-> 
-> CREATE TABLE \[dbo\].\[dimension\_city1\] AS CLONE OF
-> \[dbo\].\[dimension\_city\];
-> 
-> \--Create a clone of the dbo.fact\_sale table.
-> 
-> CREATE TABLE \[dbo\].\[fact\_sale1\] AS CLONE OF
-> \[dbo\].\[fact\_sale\];
-> 
-> ![](./media/image57.png)
+     SQLCopy
+     ```
+    --Create a clone of the dbo.dimension_city table.
+    CREATE TABLE [dbo].[dimension_city1] AS CLONE OF [dbo].[dimension_city];
+    
+    --Create a clone of the dbo.fact_sale table.
+    CREATE TABLE [dbo].[fact_sale1] AS CLONE OF [dbo].[fact_sale];
+    ```
+     ![](./media/image57.png)
 
 4.  Select **Run** to execute the query. The query takes a few seconds
     to execute. After the query is completed, the table clones
-    **dimension\_city1** and **fact\_sale1** will be created.
+    **dimension_city1** and **fact_sale1** will be created.
 
-> ![](./media/image58.png)
-> 
-> ![](./media/image59.png)
+     ![](./media/image58.png)
+
+     ![](./media/image59.png)
 
 5.  Load the data preview to validate the data loaded successfully by
-    selecting on the **dimension\_city1** table in the **Explorer**.
+    selecting on the **dimension_city1** table in the **Explorer**.
 
-> ![](./media/image60.png)
+     ![](./media/image60.png)
 
 6.  Right-click on **SQL query** that you’ve created to clone the
     tables in the **Explorer** and select **Rename**.
 
-> ![](./media/image61.png)
+     ![](./media/image61.png)
 
 7.  In the **Rename** dialog box, under the **Name** field, enter
-    +++**Clone Table+++**, then click on the **Rename** button.
+    **+++Clone Table+++**, then click on the **Rename** button.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image62.png)
+     ![](./media/image62.png)
 
 8.  Click on the **Refresh** icon in the command bar below the **Home**
     tab.
 
-> ![](./media/image63.png)
+     ![](./media/image63.png)
 
 ## Task 2: Create a table clone across schemas within the same warehouse
 
-1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
+1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**. 
 
-> ![](./media/image50.png)
+     ![](./media/image50.png)
 
 2.  Create a new schema within the **WideWorldImporter** warehouse
     named **dbo1**. **Copy paste** and **run** the following T-SQL code
     as shown in the below image:
 
-> SQLCopy
-> 
-> CREATE SCHEMA
-    dbo1;
+    SQLCopy
+    ```
+    CREATE SCHEMA dbo1;
+    ```
+    ![](./media/image64.png)
 
-![](./media/image64.png)
+    ![](./media/image65.png)
 
-![](./media/image65.png)
+3.In the **query editor**, remove the existing code and paste the following to create clones of the **dbo.dimension_city ** and **dbo.fact_sale** tables in the dbo1 schema.  
 
-3.  In the query editor, remove the existing code and paste the following to create clones of the **dbo.dimension\_city** and dbo.**fact\_sale tables** in the **dbo1** schema.
-
-> **SQLCopy**
-> 
-> \--Create a clone of the dbo.dimension\_city table in the dbo1 schema.
-> 
-> CREATE TABLE \[dbo1\].\[dimension\_city1\] AS CLONE OF
-> \[dbo\].\[dimension\_city\];
-> 
-> \--Create a clone of the dbo.fact\_sale table in the dbo1 schema.
-> 
-> CREATE TABLE \[dbo1\].\[fact\_sale1\] AS CLONE OF
-> \[dbo\].\[fact\_sale\];
+       **SQLCopy**
+       ```
+      --Create a clone of the dbo.dimension_city table in the dbo1 schema.
+      CREATE TABLE [dbo1].[dimension_city1] AS CLONE OF [dbo].[dimension_city];
+      
+      --Create a clone of the dbo.fact_sale table in the dbo1 schema.
+      CREATE TABLE [dbo1].[fact_sale1] AS CLONE OF [dbo].[fact_sale];
+      ```
 
 4.  Select **Run** to execute the query. The query takes a few seconds
     to execute.
 
-> ![](./media/image66.png)
+     ![](./media/image66.png)
 
 5.  After the query is completed,
-    clones **dimension\_city1** and **fact\_sale1** are created in
+    clones **dimension_city1** and **fact_sale1** are created in
     the **dbo1** schema.
 
-> ![](./media/image67.png)
+    ![](./media/image67.png)
 
 6.  Load the data preview to validate the data loaded successfully by
-    selecting on the **dimension\_city1** table under **dbo1** schema in
+    selecting on the **dimension_city1** table under **dbo1** schema in
     the **Explorer**.
 
-![](./media/image68.png)
+     ![](./media/image68.png)
 
 7.  **Rename** the query for reference later. Right-click on **SQL query
     1** in the **Explorer** and select **Rename**.
 
-> ![](./media/image69.png)
+     ![](./media/image69.png)
 
 8.  In the **Rename** dialog box, under the **Name** field, enter
-    +++**Clone Table in another schema+++**. Then, click on **Rename**
+    +++Clone Table in another schema+++. Then, click on **Rename**
     button.
 
      ![](./media/image70.png)
@@ -649,8 +578,7 @@ syntax.
 9.  Click on the **Refresh** icon in the command bar below the **Home**
     tab.
 
-> ![A screenshot of a computer Description automatically
-> generated](./media/image71.png)
+     ![](./media/image71.png)
 
 # Exercise 5: Transform data using a stored procedure
 
