@@ -248,58 +248,30 @@ trial enabled.
 10. On the **Connection settings** pane that appears on the right side,
     configure the following settings and click on the **Create** button.
 
-<!-- end list -->
-
-  - In the **Account name or URL**, enter
-    +++https://fabrictutorialdata.blob.core.windows.net/sampledata/+++
-
-<!-- end list -->
-
-  - In the **Connection credentials** section, click on the dropdown
-    under **Connection**, then select **Create new connection**.
-
-<!-- end list -->
-
-  - In **Connection name** field**,** enter +++**Wide World Importers
-    Public Sample+++**.
-
-<!-- end list -->
-
-  - Set the **Authentication kind** to **Anonymous**.
-
-![](./media/image31.png)
+  •	In the Account name or URL, enter +++https://fabrictutorialdata.blob.core.windows.net/sampledata/+++
+  •	In the Connection credentials section, click on the dropdown under Connection, then select Create new connection.
+  •	In Connection name field, enter +++Wide World Importers Public Sample+++.
+  •	Set the Authentication kind to **Anonymous**.
+     ![](./media/image31.png)
 
 11. Change the remaining settings on the **Source** page of the copy
-    activity as follows to reach the .parquet files
-    in **https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/parquet/full/dimension\_customer/\*.parquet**
+    activity as follows to reach the .parquet files in
+     **https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/parquet/full/dimension_customer/*.parquet**
 
 12. In the **File path** text boxes, provide:
 
-<!-- end list -->
+    •	Container: **sampledata**
+    •	File path - Directory: **WideWorldImportersDW/tables**
+    •	 File path - File name: **dimension_customer.parquet**
+    •	In the File format drop down, choose Parquet (if you are unable to see Parquet, then type in the search box and then select it)
+     ![](./media/image32.png)
 
-  - **Container:** **sampledata**
-
-<!-- end list -->
-
-  - **File path - Directory:** **WideWorldImportersDW/tables**
-
-<!-- end list -->
-
-  - **File path - File name:** **dimension\_customer.parquet**
-    
-      - In the **File format** drop down, choose **Parquet** (if you are
-        unable to see **Parquet**, then type in the search box and then
-        select it)
-
-           ![](./media/image32.png)
-
-13. Click on **Preview data** on the right side of **File path** setting
+14. Click on **Preview data** on the right side of **File path** setting
     to ensure that there are no errors and then click on **close.**
 
-      ![](./media/image33.png)
+    ![](./media/image33.png)
 
-![A screenshot of a computer Description automatically
-generated](./media/image34.png)
+    ![](./media/image34.png)
 
 14. On the **Destination** tab, enter the following settings.
 
@@ -308,9 +280,7 @@ generated](./media/image34.png)
 |Connection| WideWorldImporters|
 |Table option|	select the Auto create table radio button.|
 |Data Warehouse|	drop down, select WideWorldImporters from the list|
-|Table|	In the first box enter dbo|
-      |	In the second box enter dimension_customer|
-
+|Table|	•	In the first box enter dbo                                                                                     •	In the second box enter dimension_customer|
 
  ![](./media/image35.png)
 
@@ -322,18 +292,14 @@ generated](./media/image34.png)
     button.
 
      ![](./media/image37.png)
-> 
-   ![A screenshot of a computer Description automatically
-   generated](./media/image38.png)
-> 
-   ![A screenshot of a computer Description automatically
-   generated](./media/image39.png)
+    ![](./media/image38.png)
+
+    ![](./media/image39.png)
 
 17. Monitor the copy activity's progress on the **Output** page and wait
     for it to complete.
 
-     ![A screenshot of a computer Description automatically
-      generated](./media/image40.png)
+   ![](./media/image40.png)
 
 # Exercise 3: Create tables in a Data Warehouse
 
