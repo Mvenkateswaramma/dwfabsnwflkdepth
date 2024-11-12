@@ -1141,8 +1141,8 @@ reports.
 
      ![](./media/image141.png)
 
-2.  From the **fact\_sale** table, drag the **CityKey** field and drop
-    it onto the **CityKey** field in the **dimension\_city** table to
+2.  From the **fact_sale** table, drag the **CityKey** field and drop
+    it onto the **CityKey** field in the **dimension_city** table to
     create a relationship.
 
     ![](./media/image142.png)
@@ -1150,23 +1150,23 @@ reports.
 3.  On the **Create Relationship** settings:
 
 
-    - **Table 1** is populated with **fact_sale** and the column
-      of **CityKey**.
-  
-    - **Table 2** is populated with **dimension_city** and the column
-      of **CityKey**.
-  
-    - **Cardinality**: select **Many to one (*:1)**.
-  
-    - **Cross filter direction**: select **Single**.
-  
-    - Check the box for **Make this relationship active**.
-  
-    - Select **Save**.
-
-    ![](./media/image143.png)
+      - **Table 1** is populated with **fact_sale** and the column
+        of **CityKey**.
     
-    ![](./media/image144.png)
+      - **Table 2** is populated with **dimension_city** and the column
+        of **CityKey**.
+    
+      - **Cardinality**: select **Many to one (*:1)**.
+    
+      - **Cross filter direction**: select **Single**.
+    
+      - Check the box for **Make this relationship active**.
+    
+      - Select **Save**.
+  
+      ![](./media/image143.png)
+      
+      ![](./media/image144.png)
 
 4.  From the **Reporting** tab of the ribbon, select **New report**.
 
@@ -1174,7 +1174,7 @@ reports.
      
      ![](./media/image146.png)
 
-5.  In the **Synapse Data Engineering Warehouse\_FabricXX** page,
+5.  In the **Synapse Data Engineering Warehouse_FabricXX** page,
     under **Visualizations**, click to the **Column chart** icon to add
     a **Column chart** to your report.
 
@@ -1201,7 +1201,7 @@ reports.
     column chart visual is no longer selected.
 
 7.  Build a **Maps** visual,On the **Visualizations** pane, select
-    the **ArcGIS Maps for Power BI** visual.
+    the **Azure Maps for Power BI** visual.
 
      ![](./media/image150.png)
 
@@ -1255,7 +1255,7 @@ reports.
 
     ![](./media/image158.png)
 
-18. In the Synapse Data Engineering Warehouse\_FabricXX page, from the
+18. In the Synapse Data Engineering Warehouse_FabricXX page, from the
     ribbon, select **File** and select the **Save**.
 
       ![](./media/image159.png)
