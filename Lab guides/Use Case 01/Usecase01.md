@@ -197,27 +197,28 @@ trial enabled.
     select **Warehouse\_FabricXX** in the left-sided navigation menu to
     return to the workspace item list.
       ![](./media/image21.png)
+    
       ![](./media/image22.png)
 
-2.  In the **Warehouse\_FabricXX** page, select +**New item**. Then,
+3.  In the **Warehouse\_FabricXX** page, select +**New item**. Then,
     click Data pipeline to view the full list of available items under
     Get data.
      ![](./media/image23.png)
 
-3.  On the **New** **pipeline** dialog box, in the **Name** field, enter
+4.  On the **New** **pipeline** dialog box, in the **Name** field, enter
     +++Load Customer Data+++ and click on the **Create** button.
       ![](./media/image24.png)
 
-4.  In the **Load Customer Data** page, navigate to **Start building
+5.  In the **Load Customer Data** page, navigate to **Start building
     your data pipeline** section and click on **Pipeline activity**.
      ![](./media/image25.png)
 
-5.  Navigate and select **Copy data** under **Move
+6.  Navigate and select **Copy data** under **Move
     &transform** section.
 
     ![](./media/image26.png)
 
-6.  Select the newly created **Copy data** **1** activity from the
+7.  Select the newly created **Copy data** **1** activity from the
     design canvas to configure it.
     **Note**: Drag the horizonal line in the design canvas to have a
      complete view of various features.
