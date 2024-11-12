@@ -197,55 +197,51 @@ trial enabled.
     select **Warehouse\_FabricXX** in the left-sided navigation menu to
     return to the workspace item list.
 
-     ![](./media/image21.png)
-
-     ![](./media/image22.png)
+      ![](./media/image21.png)
+      ![](./media/image22.png)
 
 2.  In the **Warehouse\_FabricXX** page, select +**New item**. Then,
     click Data pipeline to view the full list of available items under
     Get data.
-
      ![](./media/image23.png)
 
 3.  On the **New** **pipeline** dialog box, in the **Name** field, enter
     +++Load Customer Data+++ and click on the **Create** button.
-
       ![](./media/image24.png)
 
 4.  In the **Load Customer Data** page, navigate to **Start building
     your data pipeline** section and click on **Pipeline activity**.
+     ![](./media/image25.png)
 
-       ![](./media/image25.png)
-
-5.  Navigate and select **Copy data** under **Move
+6.  Navigate and select **Copy data** under **Move
     &transform** section.
 
     ![](./media/image26.png)
 
-6.  Select the newly created **Copy data** **1** activity from the
+7.  Select the newly created **Copy data** **1** activity from the
     design canvas to configure it.
   
      **Note**: Drag the horizonal line in the design canvas to have a
      complete view of various features.
       ![](./media/image27.png)
 
-7.  On the **General** tab, in the **Name** field**,** enter +++CD
+8.  On the **General** tab, in the **Name** field**,** enter +++CD
     Load dimension_customer+++ .
 
      ![](./media/image28.png)
 
-8.  On the **Source** page, select the **Connection** dropdown.
+9.  On the **Source** page, select the **Connection** dropdown.
     Select **More** to see all of the data sources you can choose from,
     including data sources in your local OneLake data hub.
 
      ![](./media/image29.png)
 
-9.  On the **Get data** window, search **Azure Blob Storage** in, then
+10.  On the **Get data** window, search **Azure Blob Storage** in, then
     click on the **Azure Blob Storage** button.
 
-     ![](./media/image30.png)
+      ![](./media/image30.png)
 
-10. On the **Connection settings** pane that appears on the right side,
+11. On the **Connection settings** pane that appears on the right side,
     configure the following settings and click on the **Create** button.
 
       •	In the Account name or URL, enter +++https://fabrictutorialdata.blob.core.windows.net/sampledata/+++
@@ -254,11 +250,11 @@ trial enabled.
       •	Set the Authentication kind to **Anonymous**.
          ![](./media/image31.png)
 
-11. Change the remaining settings on the **Source** page of the copy
+12. Change the remaining settings on the **Source** page of the copy
     activity as follows to reach the .parquet files in   
     https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/parquet/full/dimension_customer/*.parquet
 
-12. In the **File path** text boxes, provide:
+13. In the **File path** text boxes, provide:
 
       •	Container: **sampledata**
       •	File path - Directory: **WideWorldImportersDW/tables**
@@ -267,14 +263,14 @@ trial enabled.
          then select it)
        ![](./media/image32.png)
 
-13. Click on **Preview data** on the right side of **File path** setting
+14. Click on **Preview data** on the right side of **File path** setting
     to ensure that there are no errors and then click on **close.**
 
     ![](./media/image33.png)
 
     ![](./media/image34.png)
 
-14. On the **Destination** tab, enter the following settings.
+15. On the **Destination** tab, enter the following settings.
 
     |     |    |
     |-------|------|
@@ -285,11 +281,11 @@ trial enabled.
 
      ![](./media/image35.png)
 
-15. From the ribbon, select **Run**.
+16. From the ribbon, select **Run**.
 
       ![](./media/image36.png)
 
-16. In the **Save and run?** dialog box, click on **Save and run**
+17. In the **Save and run?** dialog box, click on **Save and run**
     button.
 
      ![](./media/image37.png)
@@ -297,7 +293,7 @@ trial enabled.
 
       ![](./media/image39.png)
 
-17. Monitor the copy activity's progress on the **Output** page and wait
+18. Monitor the copy activity's progress on the **Output** page and wait
     for it to complete.
 
      ![](./media/image40.png)
