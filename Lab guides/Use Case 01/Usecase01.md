@@ -213,19 +213,19 @@ trial enabled.
     your data pipeline** section and click on **Pipeline activity**.
      ![](./media/image25.png)
 
-6.  Navigate and select **Copy data** under **Move
+5.  Navigate and select **Copy data** under **Move
     &transform** section.
 
     ![](./media/image26.png)
 
-7.  Select the newly created **Copy data** **1** activity from the
+6.  Select the newly created **Copy data** **1** activity from the
     design canvas to configure it.
-  
-     **Note**: Drag the horizonal line in the design canvas to have a
+    **Note**: Drag the horizonal line in the design canvas to have a
      complete view of various features.
+    
       ![](./media/image27.png)
 
-8.  On the **General** tab, in the **Name** field**,** enter +++CD
+8.  On the **General** tab, in the **Name** field, enter +++CD
     Load dimension_customer+++ .
 
      ![](./media/image28.png)
