@@ -197,8 +197,7 @@ trial enabled.
     select **Warehouse\_FabricXX** in the left-sided navigation menu to
     return to the workspace item list.
       ![](./media/image21.png)
-    
-      ![](./media/image22.png)
+          ![](./media/image22.png)
 
 2.  In the **Warehouse\_FabricXX** page, select +**New item**. Then,
     click Data pipeline to view the full list of available items under
