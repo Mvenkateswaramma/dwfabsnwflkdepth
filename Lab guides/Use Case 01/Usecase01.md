@@ -196,7 +196,6 @@ trial enabled.
 1.  From the **WideWorldImporters** warehouse landing page,
     select **Warehouse\_FabricXX** in the left-sided navigation menu to
     return to the workspace item list.
-
       ![](./media/image21.png)
       ![](./media/image22.png)
 
