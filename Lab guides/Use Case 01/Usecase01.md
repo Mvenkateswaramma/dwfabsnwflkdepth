@@ -43,16 +43,16 @@ Fabric professional and citizen developer experiences.
   - Create clones of dimension\_city and fact\_sale tables in the
     Warehouse.
 
-  - Clone dimension\_city and fact\_sale tables into the dbo1 schema.
+  - Clone dimension_city and fact_sale tables into the dbo1 schema.
 
   - Develop a stored procedure to transform data and create
-    aggregate\_sale\_by\_date\_city table.
+    aggregate_sale_by_date_city table.
 
   - Generate a query using the visual query builder to merge and
     aggregate data.
 
   - Use a notebook to query and analyze data from the
-    dimension\_customer table.
+    dimension_customer table.
 
   - Include WideWorldImporters and ShortcutExercise warehouses for
     cross-querying.
