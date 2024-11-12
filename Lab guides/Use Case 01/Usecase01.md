@@ -224,13 +224,13 @@ trial enabled.
 
 6.  Select the newly created **Copy data** **1** activity from the
     design canvas to configure it.
+  
+     **Note**: Drag the horizonal line in the design canvas to have a
+     complete view of various features.
+      ![](./media/image27.png)
 
-   **Note**: Drag the horizonal line in the design canvas to have a
-   complete view of various features.
-    ![](./media/image27.png)
-
-7.  On the **General** tab, in the **Name** field**,** enter +++**CD
-    Load dimension\_customer+++** .
+7.  On the **General** tab, in the **Name** field**,** enter +++CD
+    Load dimension_customer+++ .
 
      ![](./media/image28.png)
 
@@ -248,25 +248,26 @@ trial enabled.
 10. On the **Connection settings** pane that appears on the right side,
     configure the following settings and click on the **Create** button.
 
-  •	In the Account name or URL, enter +++https://fabrictutorialdata.blob.core.windows.net/sampledata/+++
-  •	In the Connection credentials section, click on the dropdown under Connection, then select Create new connection.
-  •	In Connection name field, enter +++Wide World Importers Public Sample+++.
-  •	Set the Authentication kind to **Anonymous**.
-     ![](./media/image31.png)
+      •	In the Account name or URL, enter +++https://fabrictutorialdata.blob.core.windows.net/sampledata/+++
+      •	In the Connection credentials section, click on the dropdown under Connection, then select Create new connection.
+      •	In Connection name field, enter +++Wide World Importers Public Sample+++.
+      •	Set the Authentication kind to **Anonymous**.
+         ![](./media/image31.png)
 
 11. Change the remaining settings on the **Source** page of the copy
-    activity as follows to reach the .parquet files in
-     **https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/parquet/full/dimension_customer/*.parquet**
+    activity as follows to reach the .parquet files in   
+    https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/parquet/full/dimension_customer/*.parquet
 
 12. In the **File path** text boxes, provide:
 
-    •	Container: **sampledata**
-    •	File path - Directory: **WideWorldImportersDW/tables**
-    •	 File path - File name: **dimension_customer.parquet**
-    •	In the File format drop down, choose Parquet (if you are unable to see Parquet, then type in the search box and then select it)
-     ![](./media/image32.png)
+      •	Container: **sampledata**
+      •	File path - Directory: **WideWorldImportersDW/tables**
+      •	 File path - File name: **dimension_customer.parquet**
+      •	In the File format drop down, choose Parquet (if you are unable to see Parquet, then type in the search box and 
+         then select it)
+       ![](./media/image32.png)
 
-14. Click on **Preview data** on the right side of **File path** setting
+13. Click on **Preview data** on the right side of **File path** setting
     to ensure that there are no errors and then click on **close.**
 
     ![](./media/image33.png)
@@ -275,31 +276,31 @@ trial enabled.
 
 14. On the **Destination** tab, enter the following settings.
 
-|     |    |
-|-------|------|
-|Connection| WideWorldImporters|
-|Table option|	select the Auto create table radio button.|
-|Data Warehouse|	drop down, select WideWorldImporters from the list|
-|Table|	•	In the first box enter dbo                                                                                     •	In the second box enter dimension_customer|
+    |     |    |
+    |-------|------|
+    |Connection| WideWorldImporters|
+    |Table option|	select the Auto create table radio button.|
+    |Data Warehouse|	drop down, select WideWorldImporters from the list|
+    |Table|	•	In the first box enter dbo                                                                                     •	In the second box enter dimension_customer|
 
- ![](./media/image35.png)
+     ![](./media/image35.png)
 
 15. From the ribbon, select **Run**.
 
-  ![](./media/image36.png)
+      ![](./media/image36.png)
 
 16. In the **Save and run?** dialog box, click on **Save and run**
     button.
 
      ![](./media/image37.png)
-    ![](./media/image38.png)
+      ![](./media/image38.png)
 
-    ![](./media/image39.png)
+      ![](./media/image39.png)
 
 17. Monitor the copy activity's progress on the **Output** page and wait
     for it to complete.
 
-   ![](./media/image40.png)
+     ![](./media/image40.png)
 
 # Exercise 3: Create tables in a Data Warehouse
 
@@ -322,70 +323,70 @@ trial enabled.
 
 4.  In the query editor, paste the following code and select **Run** to
     execute the query
-    ```
-    /*
-    1. Drop the dimension_city table if it already exists.
-    2. Create the dimension_city table.
-    3. Drop the fact_sale table if it already exists.
-    4. Create the fact_sale table.
-    */
-    
-    --dimension_city
-    DROP TABLE IF EXISTS [dbo].[dimension_city];
-    CREATE TABLE [dbo].[dimension_city]
-        (
-            [CityKey] [int] NULL,
-            [WWICityID] [int] NULL,
-            [City] [varchar](8000) NULL,
-            [StateProvince] [varchar](8000) NULL,
-            [Country] [varchar](8000) NULL,
-            [Continent] [varchar](8000) NULL,
-            [SalesTerritory] [varchar](8000) NULL,
-            [Region] [varchar](8000) NULL,
-            [Subregion] [varchar](8000) NULL,
-            [Location] [varchar](8000) NULL,
-            [LatestRecordedPopulation] [bigint] NULL,
-            [ValidFrom] [datetime2](6) NULL,
-            [ValidTo] [datetime2](6) NULL,
-            [LineageKey] [int] NULL
-        );
-    
-    --fact_sale
-    
-    DROP TABLE IF EXISTS [dbo].[fact_sale];
-    
-    CREATE TABLE [dbo].[fact_sale]
-    
-        (
-            [SaleKey] [bigint] NULL,
-            [CityKey] [int] NULL,
-            [CustomerKey] [int] NULL,
-            [BillToCustomerKey] [int] NULL,
-            [StockItemKey] [int] NULL,
-            [InvoiceDateKey] [datetime2](6) NULL,
-            [DeliveryDateKey] [datetime2](6) NULL,
-            [SalespersonKey] [int] NULL,
-            [WWIInvoiceID] [int] NULL,
-            [Description] [varchar](8000) NULL,
-            [Package] [varchar](8000) NULL,
-            [Quantity] [int] NULL,
-            [UnitPrice] [decimal](18, 2) NULL,
-            [TaxRate] [decimal](18, 3) NULL,
-            [TotalExcludingTax] [decimal](29, 2) NULL,
-            [TaxAmount] [decimal](38, 6) NULL,
-            [Profit] [decimal](18, 2) NULL,
-            [TotalIncludingTax] [decimal](38, 6) NULL,
-            [TotalDryItems] [int] NULL,
-            [TotalChillerItems] [int] NULL,
-            [LineageKey] [int] NULL,
-            [Month] [int] NULL,
-            [Year] [int] NULL,
-            [Quarter] [int] NULL
-        );
-    ```
-    ![](./media/image44.png)
-
-    ![](./media/image45.png)
+      ```
+      /*
+      1. Drop the dimension_city table if it already exists.
+      2. Create the dimension_city table.
+      3. Drop the fact_sale table if it already exists.
+      4. Create the fact_sale table.
+      */
+      
+      --dimension_city
+      DROP TABLE IF EXISTS [dbo].[dimension_city];
+      CREATE TABLE [dbo].[dimension_city]
+          (
+              [CityKey] [int] NULL,
+              [WWICityID] [int] NULL,
+              [City] [varchar](8000) NULL,
+              [StateProvince] [varchar](8000) NULL,
+              [Country] [varchar](8000) NULL,
+              [Continent] [varchar](8000) NULL,
+              [SalesTerritory] [varchar](8000) NULL,
+              [Region] [varchar](8000) NULL,
+              [Subregion] [varchar](8000) NULL,
+              [Location] [varchar](8000) NULL,
+              [LatestRecordedPopulation] [bigint] NULL,
+              [ValidFrom] [datetime2](6) NULL,
+              [ValidTo] [datetime2](6) NULL,
+              [LineageKey] [int] NULL
+          );
+      
+      --fact_sale
+      
+      DROP TABLE IF EXISTS [dbo].[fact_sale];
+      
+      CREATE TABLE [dbo].[fact_sale]
+      
+          (
+              [SaleKey] [bigint] NULL,
+              [CityKey] [int] NULL,
+              [CustomerKey] [int] NULL,
+              [BillToCustomerKey] [int] NULL,
+              [StockItemKey] [int] NULL,
+              [InvoiceDateKey] [datetime2](6) NULL,
+              [DeliveryDateKey] [datetime2](6) NULL,
+              [SalespersonKey] [int] NULL,
+              [WWIInvoiceID] [int] NULL,
+              [Description] [varchar](8000) NULL,
+              [Package] [varchar](8000) NULL,
+              [Quantity] [int] NULL,
+              [UnitPrice] [decimal](18, 2) NULL,
+              [TaxRate] [decimal](18, 3) NULL,
+              [TotalExcludingTax] [decimal](29, 2) NULL,
+              [TaxAmount] [decimal](38, 6) NULL,
+              [Profit] [decimal](18, 2) NULL,
+              [TotalIncludingTax] [decimal](38, 6) NULL,
+              [TotalDryItems] [int] NULL,
+              [TotalChillerItems] [int] NULL,
+              [LineageKey] [int] NULL,
+              [Month] [int] NULL,
+              [Year] [int] NULL,
+              [Quarter] [int] NULL
+          );
+      ```
+      ![](./media/image44.png)
+  
+      ![](./media/image45.png)
 
 5.  To save this query, right-click on the **SQL query 1** tab just
     above the editor and select **Rename**.
@@ -401,12 +402,12 @@ trial enabled.
 7.  Validate the table was created successfully by selecting the
     **refresh icon** button on the ribbon.
 
-    ![](./media/image48.png)
+     ![](./media/image48.png)
 
-8.  In the **Explorer** pane, you’ll see the **fact\_sale** table
-    and **dimension\_city** table.
+8.  In the **Explorer** pane, you’ll see the **fact_sale** table
+    and **dimension_city** table.
 
-    ![](./media/image49.png)
+     ![](./media/image49.png)
 
 ## Task 2: Load data using T-SQL
 
