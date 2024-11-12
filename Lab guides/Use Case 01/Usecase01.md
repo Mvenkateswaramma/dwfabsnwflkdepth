@@ -416,26 +416,27 @@ generate a report, it's time to extend the solution by exploring other
 methods for loading
     data.
 
-1.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**.
+1. On the WideWorldImporters page, go to the Home tab, select **SQL** from the dropdown, and click on **New SQL query**.
 
-    ![](./media/image50.png)
+     ![](./media/image50.png)
 
 2.  In the query editor, **paste** the following code, then click on
     **Run** to execute the query.
 
-   SQLCopy
-    ```
-    --Copy data from the public Azure storage account to the dbo.dimension_city table.
-    COPY INTO [dbo].[dimension_city]
-    FROM 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/dimension_city.parquet'
-    WITH (FILE_TYPE = 'PARQUET');
-    
-    --Copy data from the public Azure storage account to the dbo.fact_sale table.
-    COPY INTO [dbo].[fact_sale]
-    FROM 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/fact_sale.parquet'
-    WITH (FILE_TYPE = 'PARQUET');
-    ```
-    ![](./media/image51.png)
+     SQLCopy
+      ```
+      --Copy data from the public Azure storage account to the dbo.dimension_city table.
+      COPY INTO [dbo].[dimension_city]
+      FROM 
+      'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/dimension_city.parquet'
+      WITH (FILE_TYPE = 'PARQUET');
+      
+      --Copy data from the public Azure storage account to the dbo.fact_sale table.
+      COPY INTO [dbo].[fact_sale]
+      FROM 'https://fabrictutorialdata.blob.core.windows.net/sampledata/WideWorldImportersDW/tables/fact_sale.parquet'
+      WITH (FILE_TYPE = 'PARQUET');
+      ```
+      ![](./media/image51.png)
 
 3.  After the query is completed, review the messages, which indicats
     the number of rows that were loaded into the **dimension_city** and
@@ -450,7 +451,7 @@ methods for loading
 
 5.  Rename the query. Right-click on **SQL query 1** in
     the **Explorer**, then select **Rename**.
-    ![](./media/image54.png)
+     ![](./media/image54.png)
 
 6.  In the **Rename** dialog box, under the **Name** field, enter
     **+++Load Tables+++**. Then, click on **Rename** button.
@@ -474,22 +475,22 @@ syntax.
 
 1.  Create a table clone within the same schema in a warehouse.
 
-2.  On the **WideWorldImporters** page, go to the **Home** tab, select **SQL** from the dropdown, and click on **New SQL query**. 
+2.  On the WideWorldImporters page, go to the Home tab,select **SQL** from the dropdown, and click on **New SQL query**. 
 
      ![](./media/image50.png)
 
 3.  In the query editor, paste the following code to create clones of
     the **dbo.dimension\_city** and **dbo.fact\_sale** tables.
-
-     SQLCopy
-     ```
-    --Create a clone of the dbo.dimension_city table.
-    CREATE TABLE [dbo].[dimension_city1] AS CLONE OF [dbo].[dimension_city];
-    
-    --Create a clone of the dbo.fact_sale table.
-    CREATE TABLE [dbo].[fact_sale1] AS CLONE OF [dbo].[fact_sale];
-    ```
-     ![](./media/image57.png)
+  
+       SQLCopy
+       ```
+      --Create a clone of the dbo.dimension_city table.
+      CREATE TABLE [dbo].[dimension_city1] AS CLONE OF [dbo].[dimension_city];
+      
+      --Create a clone of the dbo.fact_sale table.
+      CREATE TABLE [dbo].[fact_sale1] AS CLONE OF [dbo].[fact_sale];
+      ```
+       ![](./media/image57.png)
 
 4.  Select **Run** to execute the query. The query takes a few seconds
     to execute. After the query is completed, the table clones
@@ -595,54 +596,54 @@ Learn how to create and save a new stored procedure to transform
     stored procedure will create and load
     the **dbo.aggregate_sale_by_date_city** table in a later step.
        SQLCopy
-     ```
-         --Drop the stored procedure if it already exists.
-    DROP PROCEDURE IF EXISTS [dbo].[populate_aggregate_sale_by_city]
-    GO
-    
-    --Create the populate_aggregate_sale_by_city stored procedure.
-    CREATE PROCEDURE [dbo].[populate_aggregate_sale_by_city]
-    AS
-    BEGIN
-        --If the aggregate table already exists, drop it. Then create the table.
-        DROP TABLE IF EXISTS [dbo].[aggregate_sale_by_date_city];
-        CREATE TABLE [dbo].[aggregate_sale_by_date_city]
-            (
-                [Date] [DATETIME2](6),
-                [City] [VARCHAR](8000),
-                [StateProvince] [VARCHAR](8000),
-                [SalesTerritory] [VARCHAR](8000),
-                [SumOfTotalExcludingTax] [DECIMAL](38,2),
-                [SumOfTaxAmount] [DECIMAL](38,6),
-                [SumOfTotalIncludingTax] [DECIMAL](38,6),
-                [SumOfProfit] [DECIMAL](38,2)
-            );
-    
-        --Reload the aggregated dataset to the table.
-        INSERT INTO [dbo].[aggregate_sale_by_date_city]
-        SELECT
-            FS.[InvoiceDateKey] AS [Date], 
-            DC.[City], 
-            DC.[StateProvince], 
-            DC.[SalesTerritory], 
-            SUM(FS.[TotalExcludingTax]) AS [SumOfTotalExcludingTax], 
-            SUM(FS.[TaxAmount]) AS [SumOfTaxAmount], 
-            SUM(FS.[TotalIncludingTax]) AS [SumOfTotalIncludingTax], 
-            SUM(FS.[Profit]) AS [SumOfProfit]
-        FROM [dbo].[fact_sale] AS FS
-        INNER JOIN [dbo].[dimension_city] AS DC
-            ON FS.[CityKey] = DC.[CityKey]
-        GROUP BY
-            FS.[InvoiceDateKey],
-            DC.[City], 
-            DC.[StateProvince], 
-            DC.[SalesTerritory]
-        ORDER BY 
-            FS.[InvoiceDateKey], 
-            DC.[StateProvince], 
-            DC.[City];
-    END
-    ```
+       ```
+           --Drop the stored procedure if it already exists.
+      DROP PROCEDURE IF EXISTS [dbo].[populate_aggregate_sale_by_city]
+      GO
+      
+      --Create the populate_aggregate_sale_by_city stored procedure.
+      CREATE PROCEDURE [dbo].[populate_aggregate_sale_by_city]
+      AS
+      BEGIN
+          --If the aggregate table already exists, drop it. Then create the table.
+          DROP TABLE IF EXISTS [dbo].[aggregate_sale_by_date_city];
+          CREATE TABLE [dbo].[aggregate_sale_by_date_city]
+              (
+                  [Date] [DATETIME2](6),
+                  [City] [VARCHAR](8000),
+                  [StateProvince] [VARCHAR](8000),
+                  [SalesTerritory] [VARCHAR](8000),
+                  [SumOfTotalExcludingTax] [DECIMAL](38,2),
+                  [SumOfTaxAmount] [DECIMAL](38,6),
+                  [SumOfTotalIncludingTax] [DECIMAL](38,6),
+                  [SumOfProfit] [DECIMAL](38,2)
+              );
+      
+          --Reload the aggregated dataset to the table.
+          INSERT INTO [dbo].[aggregate_sale_by_date_city]
+          SELECT
+              FS.[InvoiceDateKey] AS [Date], 
+              DC.[City], 
+              DC.[StateProvince], 
+              DC.[SalesTerritory], 
+              SUM(FS.[TotalExcludingTax]) AS [SumOfTotalExcludingTax], 
+              SUM(FS.[TaxAmount]) AS [SumOfTaxAmount], 
+              SUM(FS.[TotalIncludingTax]) AS [SumOfTotalIncludingTax], 
+              SUM(FS.[Profit]) AS [SumOfProfit]
+          FROM [dbo].[fact_sale] AS FS
+          INNER JOIN [dbo].[dimension_city] AS DC
+              ON FS.[CityKey] = DC.[CityKey]
+          GROUP BY
+              FS.[InvoiceDateKey],
+              DC.[City], 
+              DC.[StateProvince], 
+              DC.[SalesTerritory]
+          ORDER BY 
+              FS.[InvoiceDateKey], 
+              DC.[StateProvince], 
+              DC.[City];
+      END
+      ```
   
      ![](./media/image72.png)
   
